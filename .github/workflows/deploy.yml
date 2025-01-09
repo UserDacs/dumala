@@ -25,6 +25,7 @@ jobs:
       # Create SSH Key File
       - name: Create SSH Key
         run: |
+          mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/my-server-ec2-1.pem
           chmod 600 ~/.ssh/my-server-ec2-1.pem
 
