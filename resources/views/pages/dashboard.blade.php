@@ -14,7 +14,7 @@
     <!-- BEGIN breadcrumb -->
     <ol class="breadcrumb" style="margin-left: 6px !important;">
         <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-        <li class="breadcrumb-item active">Dashboard 1</li>
+        <li class="breadcrumb-item active">Dashboard</li>
     </ol>
     <!-- END breadcrumb -->
     <!-- BEGIN page-header -->
