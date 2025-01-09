@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository
+
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Set up PHP
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -22,14 +22,12 @@ jobs:
           extensions: mbstring, mysql, xml
           coverage: none
 
-      # Create SSH Key File
       - name: Create SSH Key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/my-server-ec2-1.pem
           chmod 600 ~/.ssh/my-server-ec2-1.pem
 
-      # Deploy to EC2
       - name: Deploy to AWS EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/my-server-ec2-1.pem ubuntu@ec2-3-106-217-77.ap-southeast-2.compute.amazonaws.com "
