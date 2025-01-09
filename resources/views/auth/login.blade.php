@@ -1,73 +1,156 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="login login-v2 fw-bold">
+    <!-- BEGIN login-cover -->
+    <div class="login-cover">
+        <div class="login-cover-img" style="background-image: url({{ asset('assets/img/login-bg/login-bg-17.jpg') }})"
+            data-id="login-cover-image"></div>
+        <div class="login-cover-bg"></div>
     </div>
+    <!-- END login-cover -->
+
+    <!-- BEGIN login-container -->
+    <div class="login-container">
+        <!-- BEGIN login-header -->
+        <div class="login-header d-flex justify-content-center">
+            <!-- <div class="brand">
+                <div class="d-flex align-items-center">
+                    <i class="fab fa-facebook-square fa-lg me-3"></i> <b>Color</b> Admin
+                </div>
+                <small>Bootstrap 5 Responsive Admin Template</small>
+            </div>
+            <div class="icon">
+                <i class="fa fa-lock"></i>
+            </div> -->
+            <img class="card-img-top w-200px " src="{{ asset('assets/img/logos-dumala-trans.png') }}" alt="">
+        </div>
+        <!-- END login-header -->
+
+        <!-- BEGIN login-content -->
+        <div class="login-content">
+            <form id="loginForm">
+                @csrf
+                <div class="form-floating mb-20px">
+                    <input type="text" name="email" class="form-control fs-13px h-45px border-0"
+                        placeholder="Email Address" id="email" />
+                    <label for="email" class="d-flex align-items-center text-gray-600 fs-13px">Email Address</label>
+                    <div class="invalid-feedback" id="emailError"></div>
+                </div>
+                <div class="form-floating mb-20px position-relative">
+                    <input type="password" name="password" class="form-control fs-13px h-45px border-0" 
+                        placeholder="Password" id="password" />
+                    <label for="password" class="d-flex align-items-center text-gray-600 fs-13px">Password</label>
+                    <div class="invalid-feedback" id="passwordError"></div>
+                    <!-- Eye toggle icon -->
+                    <span class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3 cursor-pointer">
+                        <i class="text-teal-900 fas fa-lg fa-fw me-10px fa-eye-slash" id="togglePasswordIcon"></i>
+                    </span>
+                </div>
+                <!-- <div class="form-check mb-20px">
+                    <input class="form-check-input border-0" type="checkbox" name="remember" value="1"
+                        id="rememberMe" />
+                    <label class="form-check-label fs-13px text-gray-500" for="rememberMe">Remember Me</label>
+                </div> -->
+                <div class="mb-20px">
+                    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">Sign me in</button>
+                </div>
+            </form>
+            <div id="loginMessage" style="display:none;" class="alert"></div>
+        </div>
+        <!-- END login-content -->
+    </div>
+    <!-- END login-container -->
 </div>
+<script>
+// swal({
+// title: "Good job!",
+// text: "You clicked the button!",
+// icon: "success",
+// buttons: false, 
+// timer: 3000,   
+// }); fas fa-lg fa-fw me-10px fa-eye-slash
+
+$(document).ready(function() {
+    $('#loginForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Clear previous messages and errors
+        $('#loginMessage').hide().removeClass('alert-success alert-danger').html('');
+        $('.form-control').removeClass('is-invalid');
+        $('.invalid-feedback').html('');
+
+        // Collect form data
+        let formData = {
+            email: $('#email').val(),
+            password: $('#password').val(),
+            remember: $('#rememberMe').is(':checked') ? 1 : 0,
+            _token: $('input[name="_token"]').val()
+        };
+
+        // Send AJAX request
+        $.ajax({
+            url: '{{ route("login") }}',
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                // Handle success
+                $('#loginMessage')
+                    .addClass('alert-success')
+                    .html('Login successful! Redirecting...')
+                    .show();
+
+                // Redirect to the intended page
+                setTimeout(function() {
+                    window.location.href = response.redirect || '/';
+                }, 1000);
+            },
+            error: function(xhr) {
+                // Handle error
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    let errors = xhr.responseJSON.errors;
+                    // Add 'is-invalid' and display error messages
+                    if (errors.email) {
+                        $('#email').addClass('is-invalid');
+                        $('#emailError').html(errors.email[0]);
+                    }
+                    if (errors.password) {
+                        $('#password').addClass('is-invalid');
+                        $('#passwordError').html(errors.password[0]);
+                    }
+
+                } else {
+                    // swal({
+                    //     title: "Error!",
+                    //     text: "An unexpected error occurred. Please try again.",
+                    //     icon: "error",
+                    //     buttons: false, 
+                    //     timer: 2000,   
+                    // });
+                    $('#loginMessage')
+                        .addClass('alert-danger')
+                        .html('An unexpected error occurred. Please try again.')
+                        .show();
+
+                  
+                }
+            }
+        });
+    });
+
+    $('#togglePasswordIcon').on('click', function () {
+        const passwordInput = $('#password');
+        const icon = $(this);
+
+        if (passwordInput.attr('type') === 'password') {
+            passwordInput.attr('type', 'text');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        } else {
+            passwordInput.attr('type', 'password');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        }
+    });
+});
+</script>
 @endsection

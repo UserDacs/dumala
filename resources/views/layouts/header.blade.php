@@ -88,7 +88,10 @@
                
                 <a href="#.html" class="dropdown-item">Change password</a>
                 <div class="dropdown-divider"></div>
-                <a href="login.html" class="dropdown-item">Log Out</a>
+                <a  href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item">Log Out</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
             </div>
         </div>
     </div>
