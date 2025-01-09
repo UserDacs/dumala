@@ -22,13 +22,13 @@ jobs:
           extensions: mbstring, mysql, xml
           coverage: none
 
-      # Install dependencies
-      - name: Install Dependencies
+      # Create SSH Key File
+      - name: Create SSH Key
         run: |
-          composer install --no-dev --no-progress --no-scripts
-          php artisan config:cache
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/my-server-ec2-1.pem
+          chmod 600 ~/.ssh/my-server-ec2-1.pem
 
-
+      # Deploy to EC2
       - name: Deploy to AWS EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/my-server-ec2-1.pem ubuntu@ec2-3-106-217-77.ap-southeast-2.compute.amazonaws.com "
@@ -38,5 +38,3 @@ jobs:
           php artisan migrate --force &&
           php artisan config:cache 
           "
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
