@@ -54,7 +54,7 @@
                     <label class="form-check-label fs-13px text-gray-500" for="rememberMe">Remember Me</label>
                 </div> -->
                 <div class="mb-20px">
-                    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">Sign me in</button>
+                    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">Login</button>
                 </div>
             </form>
             <div id="loginMessage" style="display:none;" class="alert"></div>
