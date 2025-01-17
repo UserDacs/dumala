@@ -421,6 +421,18 @@ $('#accounts-table').DataTable({
     ordering: false
 });
 
+$('#editProfileImage').on('click', function() {
+    $('#editProfileImageInput').click();
+});
+
+$('#editProfileImageInput').on('change', function(e) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        $('#editProfileImage').attr('src', event.target.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+});
+
 $(document).ready(function() {
     $('#previewImage').on('click', function() {
         $('#profile_image').click();
