@@ -33,3 +33,9 @@ Route::post('/save-announcement', [App\Http\Controllers\ReportController::class,
 Route::post('/announcements/store', [App\Http\Controllers\AnnouncementController::class, 'storePost'])->name('announcements.store');
 
 Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
+
+Route::get('/user-list', [App\Http\Controllers\AccountsController::class, 'users_list'])->name('user-list');
+
+
+Route::get('/user/{userId}/edit', [App\Http\Controllers\AccountsController::class, 'edit']);
+Route::post('/user/{userId}/update', [App\Http\Controllers\AccountsController::class, 'update']);

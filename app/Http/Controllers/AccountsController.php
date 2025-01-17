@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Http\Resources\UserResource;
 
 class AccountsController extends Controller
 {
@@ -16,6 +18,33 @@ class AccountsController extends Controller
     public function index()
     {
         return view('pages.accounts');
+    }
+
+    public function users_list(Request $request)
+    {
+        $search = $request->input('search');
+        
+        $perPage = $request->input('perPage', 10); // Default to 10 items per page
+        $page = $request->input('page', 1); // Default to page 1
+    
+        $query = User::query();
+    
+        if (!empty($search)) {
+
+            $query->where('firstname', 'like', '%' . $search . '%')
+                  ->orWhere('lastname', 'like', '%' . $search . '%')
+                  ->orWhere('role', 'like', '%' . $search . '%');
+        }
+    
+        $users = $query->paginate($perPage);
+    
+        return UserResource::collection($users);
+    }
+
+    public function edit($userId)
+    {
+        $user = User::findOrFail($userId);
+        return response()->json(['data' => $user]);
     }
 
     /**
@@ -43,19 +72,46 @@ class AccountsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $userId)
     {
-        //
+        $request->validate([
+            'prefix' => 'nullable|string|max:10',
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:50',
+            'role' => 'required|string|in:user,admin',
+            'contact' => 'required|string|max:15',
+            'email' => 'required|string|email|unique:users,email,' . $userId,
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = User::findOrFail($userId);
+
+        $imagePath = $user->profile_image;  
+
+        if ($request->hasFile('profile_image')) {
+
+            $imagePath = '/storage/' . $request->file('profile_image')->store('profile_images', 'public');
+        }
+
+
+        $user->update([
+            'prefix' => $request->input('prefix'),
+            'name' => $request->input('firstname'),
+            'firstname' => $request->input('firstname'),
+            'lastname' => $request->input('lastname'),
+            'role' => $request->input('role'),
+            'contact' => $request->input('contact'),
+            'email' => $request->input('email'),
+            'profile_image' => $imagePath,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully!',
+            'user' => $user,
+        ]);
     }
 
     /**

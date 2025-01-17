@@ -66,6 +66,10 @@
 .switch-input:not(:checked)+.switch-label .switch-text {
     content: 'Unactive';
 }
+
+#dt-search-0 {
+    width: 500px;
+}
 </style>
 @endpush
 
@@ -106,19 +110,24 @@
             <h4 class="panel-title" style="width: auto !important;"> <a href="#modal-dialog-add" data-bs-toggle="modal"
                     class="btn btn-primary btn-sm " style="display: inline !important;">Add Account</a></h4>
             <div class="panel-heading-btn">
-                <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i
-                    class="fa fa-expand"></i></a> -->
+
                 <a href="javascript:;" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i
                         class="fa fa-redo"></i></a>
-                <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i
-                    class="fa fa-minus"></i></a>
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i
-                    class="fa fa-times"></i></a> -->
+
             </div>
         </div>
         <!-- END panel-heading -->
         <!-- BEGIN panel-body -->
         <div class="panel-body">
+            <!-- Search Input -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" id="search-input" class="form-control" placeholder="Search by Name or Role"
+                        oninput="getList(this.value)">
+                </div>
+            </div>
+
+            <!-- Table -->
             <table id="accounts-table" width="100%" class="table">
                 <thead>
                     <tr>
@@ -131,93 +140,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="odd gradeX">
-                        <td width="1%" class="fw-bold">1</td>
-                        <td width="1%" class="with-img"><img src="{{ asset('assets/img/user/user-1.jpg') }}"
-                                class="rounded h-30px my-n1 mx-n1" /></td>
-                        <td>Trident</td>
-                        <td>Internet Explorer 4.0</td>
-                        <td>
-                            <div class="switch-container">
-                                <input type="checkbox" id="customSwitch1" onchange="updateSwitchText(1)"
-                                    class="switch-input" checked />
-                                <label for="customSwitch1" class="switch-label">
-                                    <span class="switch-text switch-text1">Active</span>
-                                </label>
-                            </div>
-                        </td>
-                        <td style="text-align: right; padding-right: 50px"><a href="#" data-bs-toggle="dropdown"
-                                class="text-body text-opacity-50"><i class="fa fa-ellipsis-h fs-30px"></i></a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#" class="dropdown-item">
-                                    <a href="#modal-dialog" class="btn btn-sm btn-success w-100px"
-                                        data-bs-toggle="modal">Demo</a>
-                                </a>
-                                <a href="#" class="dropdown-item">Option 2</a>
-                                <a href="#" class="dropdown-item">Option 3</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">Option 4</a>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr class="even gradeC">
-                        <td class="fw-bold">2</td>
-                        <td class="with-img"><img src="{{ asset('assets/img/user/user-2.jpg') }}"
-                                class="rounded h-30px my-n1 mx-n1" /></td>
-                        <td>Trident</td>
-                        <td>Internet Explorer 5.0</td>
-                        <td>
-                            <div class="switch-container">
-                                <input type="checkbox" id="customSwitch2" onchange="updateSwitchText(2)"
-                                    class="switch-input" checked />
-                                <label for="customSwitch2" class="switch-label">
-                                    <span class="switch-text switch-text2">Active</span>
-                                </label>
-                            </div>
-                        </td>
-                        <td style="text-align: right; padding-right: 50px"><a href="#" data-bs-toggle="dropdown"
-                                class="text-body text-opacity-50"><i class="fa fa-ellipsis-h fs-30px"></i></a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#" class="dropdown-item">Option 1</a>
-                                <a href="#" class="dropdown-item">Option 2</a>
-                                <a href="#" class="dropdown-item">Option 3</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">Option 4</a>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr class="odd gradeA">
-                        <td class="fw-bold">3</td>
-                        <td class="with-img"><img src="{{ asset('assets/img/user/user-3.jpg') }}"
-                                class="rounded h-30px my-n1 mx-n1" /></td>
-                        <td>Trident</td>
-                        <td>Internet Explorer 5.5</td>
-                        <td>
-                            <div class="switch-container">
-                                <input type="checkbox" id="customSwitch3" onchange="updateSwitchText(3)"
-                                    class="switch-input" checked />
-                                <label for="customSwitch3" class="switch-label">
-                                    <span class="switch-text switch-text3">Active</span>
-                                </label>
-                            </div>
-                        </td>
-                        <td style="text-align: right; padding-right: 50px"><a href="#" data-bs-toggle="dropdown"
-                                class="text-body text-opacity-50"><i class="fa fa-ellipsis-h fs-30px"></i></a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#" class="dropdown-item">Option 1</a>
-                                <a href="#" class="dropdown-item">Option 2</a>
-                                <a href="#" class="dropdown-item">Option 3</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">Option 4</a>
-                            </div>
-                        </td>
-
-                    </tr>
-
+                    <!-- User data rows will be dynamically inserted here -->
                 </tbody>
             </table>
+
+            <!-- Pagination -->
+            <div class="row mt-2 justify-content-between">
+                <div class="col-md-auto me-auto">
+                    <div class="dt-info" aria-live="polite" id="accounts-table_info" role="status">
+                        Showing 0 to 0 of 0 entries
+                    </div>
+                </div>
+                <div class="col-md-auto ms-auto">
+                    <div class="dt-paging paging_full_numbers">
+                        <ul class="pagination" id="pagination-container">
+                            <!-- Pagination buttons will be dynamically inserted here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- END panel-body -->
         <!-- BEGIN hljs-wrapper -->
@@ -225,8 +166,6 @@
         <!-- END hljs-wrapper -->
     </div>
     <!-- END panel -->
-
-
     <!-- END row -->
     <!-- #modal-dialog -->
     <div class="modal fade" id="modal-dialog">
@@ -354,8 +293,9 @@
                         </div>
 
                         <div class="modal-footer" style="border: 0px !important;">
-                            <button type="submit" class="btn btn-success" style="margin-top: 15px !important;">Add</button>
-                            
+                            <button type="submit" class="btn btn-success"
+                                style="margin-top: 15px !important;">Add</button>
+
                         </div>
                     </form>
                 </div>
@@ -364,101 +304,101 @@
         </div>
     </div>
 
-    <!-- #modal-dialog-add -->
-    <!-- <div class="modal fade" id="modal-dialog-add">
+
+
+
+    <div class="modal fade" id="modal-dialog-edit">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="border: 0px !important">
-                    <h4 class="modal-title">Add Account</h4>
+                    <h4 class="modal-title">Edit Account</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
                 </div>
                 <div class="modal-body" style="margin-top: -10px !important;">
-                    <form id="addAccountForm" enctype="multipart/form-data">
+                    <form id="editAccountForm" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-4 d-flex justify-content-center">
-                                <img id="previewImage" src="{{ asset('assets/img/user/user-12.jpg') }}" width="200"
-                                    height="200" alt="" style="border-radius: 100px; margin-top: 50px;" />
-                                <input type="file" name="profile_image" id="profile_image" class="form-control mt-3"
-                                    accept="image/*">
+                                <img id="editProfileImage" src="{{ asset('assets/img/user/user-12.jpg') }}" width="200"
+                                    height="200" alt="Profile Image" style="border-radius: 100px;" />
+                                <input type="file" name="profile_image" id="editProfileImageInput" class="form-control"
+                                    accept="image/*" style="display: none;" />
                             </div>
                             <div class="col-8 pt-3">
                                 <div class="row">
                                     <div class="col-3">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="prefix" name="prefix"
-                                                placeholder="Prefix">
-                                            <label for="prefix">Prefix</label>
+                                        <div class="form-floating mb-0 mb-md-0">
+                                            <input type="text" class="form-control fs-15px" id="editPrefix"
+                                                name="prefix" placeholder="Prefix" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                            <label for="editPrefix"
+                                                class="d-flex align-items-center fs-13px">Prefix</label>
                                         </div>
                                     </div>
                                     <div class="col-9">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="firstname" name="firstname"
-                                                placeholder="First Name">
-                                            <label for="firstname">First Name</label>
+                                        <div class="form-floating mb-0 mb-md-0">
+                                            <input type="text" class="form-control fs-15px" id="editFirstname"
+                                                name="firstname" placeholder="First Name" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                            <label for="editFirstname" class="d-flex align-items-center fs-13px">First
+                                                Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="lastname" name="lastname"
-                                                placeholder="Last Name">
-                                            <label for="lastname">Last Name</label>
+                                        <div class="form-floating mb-0 mb-md-0">
+                                            <input type="text" class="form-control fs-15px" id="editLastname"
+                                                name="lastname" placeholder="Last Name" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                            <label for="editLastname" class="d-flex align-items-center fs-13px">Last
+                                                Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <select class="form-control" id="role" name="role">
+                                        <div class="form-floating mb-0 mb-md-0">
+                                            <select class="form-control fs-15px" id="editRole" name="role" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important;">
                                                 <option value="user">User</option>
                                                 <option value="admin">Admin</option>
                                             </select>
-                                            <label for="role">User Role</label>
+                                            <label for="editRole" class="d-flex align-items-center fs-13px">User
+                                                Role</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating mb-0 mb-md-0">
+                                            <input type="text" class="form-control fs-15px" id="editContact"
+                                                name="contact" placeholder="Contact Number" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                            <label for="editContact" class="d-flex align-items-center fs-13px">Contact
+                                                Number</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="contact" name="contact"
-                                                placeholder="Contact Number">
-                                            <label for="contact">Contact Number</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" id="email" name="email"
-                                                placeholder="Email Address">
-                                            <label for="email">Email Address</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" id="password" name="password"
-                                                placeholder="Password">
-                                            <label for="password">Password</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" id="password_confirmation"
-                                                name="password_confirmation" placeholder="Confirm Password">
-                                            <label for="password_confirmation">Confirm Password</label>
+                                        <div class="form-floating mb-0 mb-md-0">
+                                            <input type="email" class="form-control fs-15px" id="editEmail" name="email"
+                                                placeholder="Email" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                            <label for="editEmail" class="d-flex align-items-center fs-13px">Email
+                                                Address</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="modal-footer" style="border: 0px !important;">
-                            <button type="submit" class="btn btn-success">Add</button>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 15px !important;">Save
+                                Changes</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
+
 </div>
 @endsection
 
 @push('scripts')
 
 <script>
+getList(null);
+
 function updateSwitchText(id) {
 
     const $switchInput = $('#customSwitch' + id);
@@ -474,7 +414,11 @@ function updateSwitchText(id) {
 
 $('#accounts').addClass('active');
 $('#accounts-table').DataTable({
-    responsive: true
+    responsive: true,
+    paging: false,
+    info: false,
+    searching: false,
+    ordering: false
 });
 
 $(document).ready(function() {
@@ -511,5 +455,166 @@ $(document).ready(function() {
         });
     });
 });
+
+function openEditModal(userId) {
+    $.ajax({
+        url: `/user/${userId}/edit`, // Replace with your URL
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            // Populate modal fields with user data
+            $('#editPrefix').val(response.data.prefix);
+            $('#editFirstname').val(response.data.firstname);
+            $('#editLastname').val(response.data.lastname);
+            $('#editRole').val(response.data.role);
+            $('#editContact').val(response.data.contact);
+            $('#editEmail').val(response.data.email);
+            $('#editProfileImage').attr('src', response.data.profile_image || '/assets/img/user/user-12.jpg');
+            
+            // Store the user ID in a hidden field for form submission
+            $('#editAccountForm').data('userId', userId);
+
+            // Show the modal
+            $('#modal-dialog-edit').modal('show');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching user data:', error);
+        }
+    });
+}
+
+$('#editAccountForm').on('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const userId = $(this).data('userId');
+    const formData = new FormData(this);
+
+    $.ajax({
+        url: `/user/${userId}/update`, // Replace with your update URL
+        method: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        success: function(response) {
+            console.log("response ::", response);
+            
+            if (response.success) {
+                // Close modal
+                $('#modal-dialog-edit').modal('hide');
+                alert('Account updated successfully!');
+                // Optionally reload the user list or refresh specific row
+                getList(null);
+            } else {
+                alert('Failed to update account.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error updating user:', error);
+        }
+    });
+});
+
+function getList(search, url = '/user-list') {
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            search: search, // Include search parameter
+        },
+        dataType: 'json',
+        success: function(response) {
+            let tableContent = '';
+
+            if (response.data.length === 0) {
+                tableContent = `
+                    <tr>
+                        <td colspan="6" class="text-center">No data available</td>
+                    </tr>
+                `;
+            } else {
+                response.data.forEach((user, index) => {
+                    // Determine profile image or fallback
+                    const profileImage = user.profile_image ?
+                        `<img src="${user.profile_image}" class="rounded h-30px my-n1 mx-n1" />` :
+                        `<img src="/assets/img/user/user-profile-icon.jpg" class="rounded h-30px my-n1 mx-n1" />`;
+
+                    // Determine the status checkbox and label
+                    const isChecked = user.user_status === 'active';
+                    const statusSwitch = `
+                        <div class="switch-container">
+                            <input type="checkbox" id="customSwitch${user.id}" onchange="updateSwitchText(${user.id})"
+                                   class="switch-input" ${isChecked ? 'checked' : ''} />
+                            <label for="customSwitch${user.id}" class="switch-label">
+                                <span title="${isChecked ? 'Active' : 'Deactivated'}" class="switch-text switch-text${user.id}">${isChecked ? 'Active' : 'Deactivated'}</span>
+                            </label>
+                        </div>
+                    `;
+
+                    // Create the table row
+                    tableContent += `
+                        <tr>
+                            <td width="1%" class="fw-bold">${index + 1}</td>
+                            <td width="1%" class="with-img">${profileImage}</td>
+                            <td>${user.firstname} ${user.lastname}</td>
+                            <td>${user.role}</td>
+                            <td>${statusSwitch}</td>
+                            <td style="text-align: right; padding-right: 50px">
+                                <a href="#" data-bs-toggle="dropdown" class="text-body text-opacity-50">
+                                    <i class="fa fa-ellipsis-h fs-30px"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item" onclick="openEditModal(${user.id})">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            $('#accounts-table tbody').html(tableContent);
+
+            const paginationInfo =
+                `Showing ${response.meta.from} to ${response.meta.to} of ${response.meta.total} entries`;
+            $('#accounts-table_info').text(paginationInfo);
+
+            if (response.meta && response.meta.links) {
+                let paginationLinks = '';
+                response.meta.links.forEach(link => {
+                    if (link.url) {
+                        paginationLinks += `<li class="page-item ${link.active ? 'active' : ''}">
+                                                <a href="#" class="page-link" data-url="${link.url}" onclick="handlePaginationClick(event)">${link.label}</a>
+                                              </li>`;
+                    }
+                });
+
+                $('#pagination-container').html(paginationLinks);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}
+
+// Handle pagination button click
+function handlePaginationClick(event) {
+    event.preventDefault();
+    const url = $(event.target).data('url'); // Get the URL for the next page
+    const search = $('#search-input').val(); // Get the current search term (if any)
+    getList(search, url); // Pass the search term and the new URL for pagination
+}
+
+function updateSwitchText(id) {
+    const switchElement = $(`#customSwitch${id}`);
+    const isChecked = switchElement.is(':checked');
+    const statusText = isChecked ? 'Active' : 'Deactivated';
+    const statusText_save_data = isChecked ? 'active' : 'deactivated';
+    $(`.switch-text${id}`).attr('title', statusText);
+    $(`.switch-text${id}`).text(statusText);
+
+    console.log(`Switch ${id} is now ${statusText}`);
+}
 </script>
 @endpush
