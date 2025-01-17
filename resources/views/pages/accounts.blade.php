@@ -457,9 +457,11 @@ $(document).ready(function() {
             contentType: false,
             processData: false,
             success: function(response) {
+                getList(null);
                 alert(response.message);
                 $('#modal-dialog-add').modal('hide');
                 $('#addAccountForm')[0].reset();
+                
             },
             error: function(xhr) {
                 alert('Error: ' + xhr.responseJSON.message);
