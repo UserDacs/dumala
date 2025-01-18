@@ -516,6 +516,7 @@
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
+                    $('#modal-dialog-edit-profile').modal('hide');
                     message({
                         title: 'Success!',
                         message: 'Account updated successfully!',
@@ -523,6 +524,7 @@
                     });
 
                     getList(null);
+                    
                 } else {
                     message({
                         title: 'Error!',
