@@ -6,13 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+ 
     /**
      * Display a listing of the resource.
      */
@@ -20,6 +18,73 @@ class UserController extends Controller
     {
         //
     }
+
+    public function login(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+        $mess = '';
+        $status = true;
+        $field = 0;
+
+        $user = User::where('email',$request->email)->first();
+        if ($user) {
+            if ($user->user_status=='active') {
+                if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                    $mess = 'Login successful! Redirecting...';
+                    $field = 1;
+                }else{
+                    $status = false;
+                    $mess = 'Wrong password!';
+                    $field = 2;
+                }
+            }else {
+                $status = false;
+                $field = 3;
+                $mess = 'User is deactivated. Please Contact Administrator!';
+            }
+        }else{
+            $field = 4;
+            $status = false;
+            $mess = 'User not exist or email not exist!';
+        }
+    
+        return response()->json([
+            'success' => $status,
+            'message' => $mess,
+            'field' => $field
+        ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        // Validate input
+        // $validated = $request->validate([
+        //     'old_password' => 'required',
+        //     'new_password' => 'required|confirmed|min:8', // Ensure password is confirmed and meets length requirement
+        // ]);
+
+        $user = Auth::user();
+
+        // Check if the old password is correct
+        if (!Hash::check($request->old_password, $user->password)) {
+            return response()->json(['success' => false,'status'=> '1', 'message' => 'Old password is incorrect.']);
+        }
+
+        if ($request->input('new_password') == $request->input('confirm_pass')) {
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+            return response()->json(['success' => true, 'status'=> '2', 'message' => 'Password changed successfully.']);
+        }else{
+            return response()->json(['success' => false,'status'=> '3', 'message' => 'Password not match']);
+        }
+
+        
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -38,7 +103,7 @@ class UserController extends Controller
             'prefix' => 'nullable|string|max:10',
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
-            'role' => 'required|string|in:user,admin',
+            'role' => 'required|string',
             'contact' => 'required|string|max:15',
             'email' => 'required|string|email|unique:users,email',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',

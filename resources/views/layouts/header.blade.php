@@ -80,13 +80,13 @@
         </div>
         <div class="navbar-item navbar-user dropdown">
             <a href="#" class="navbar-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
-                <img src="{{ asset('assets/img/user/user-13.jpg') }}" alt="" />
-                <span class="d-none d-md-inline">Adam Schwartz</span> <b class="caret ms-6px"></b>
+                <img src="{{  Auth::user()->profile_image }}" alt="" />
+                <span class="d-none d-md-inline">{{ Auth::user()->firstname.' '. Auth::user()->lastname }}</span> <b class="caret ms-6px"></b>
             </a>
             <div class="dropdown-menu dropdown-menu-end me-1">
-                <a href="extra_profile.html" class="dropdown-item">Edit Profile</a>
+                <a  class="dropdown-item" onclick="openEditModalv('{{Auth::user()->id}}')">Edit Profile</a>
                
-                <a href="#.html" class="dropdown-item">Change password</a>
+                <a href="#modal-dialog-changepass" class="dropdown-item" data-bs-toggle="modal">Change password</a>
                 <div class="dropdown-divider"></div>
                 <a  href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item">Log Out</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

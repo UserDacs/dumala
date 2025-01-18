@@ -32,47 +32,43 @@
     <div class="row">
         <!-- BEGIN event-list -->
         <div class="d-none d-lg-block" style="width: 215px">
-            <div id="external-events" class="fc-event-list">
+            <div id="external-events" class="fc-event-list " style="display: none">
                 <h5 class="mb-3">List own schedules</h5>
-                <div class="fc-event" data-color="#00acac">
+                <div class="fc-event" data-sched_id="1" data-color="#00acac">
                     <div class="fc-event-text">Meeting with Client</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-success"></i></div>
                 </div>
-                <div class="fc-event" data-color="#348fe2">
+                <div class="fc-event" data-sched_id="2" data-color="#348fe2">
                     <div class="fc-event-text">IOS App Development</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-blue"></i></div>
                 </div>
-                <div class="fc-event" data-color="#f59c1a">
+                <div class="fc-event" data-sched_id="3" data-color="#f59c1a">
                     <div class="fc-event-text">Group Discussion</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-warning"></i></div>
                 </div>
-                <div class="fc-event" data-color="#ff5b57">
+                <div class="fc-event" data-sched_id="4" data-color="#ff5b57">
                     <div class="fc-event-text">New System Briefing</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-danger"></i></div>
                 </div>
-                <div class="fc-event">
-                    <div class="fc-event-text">Brainstorming</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-dark"></i></div>
-                </div>
                 <hr class="my-3" />
                 <h5 class="mb-3">List mass schedules</h5>
-                <div class="fc-event" data-color="#b6c2c9">
+                <div class="fc-event" data-sched_id="5" data-color="#b6c2c9">
                     <div class="fc-event-text">Other Event 1</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
                 </div>
-                <div class="fc-event" data-color="#b6c2c9">
+                <div class="fc-event" data-sched_id="6" data-color="#b6c2c9">
                     <div class="fc-event-text">Other Event 2</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
                 </div>
-                <div class="fc-event" data-color="#b6c2c9">
+                <div class="fc-event" data-sched_id="7" data-color="#b6c2c9">
                     <div class="fc-event-text">Other Event 3</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
                 </div>
-                <div class="fc-event" data-color="#b6c2c9">
+                <div class="fc-event" data-sched_id="8" data-color="#b6c2c9">
                     <div class="fc-event-text">Other Event 4</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
                 </div>
-                <div class="fc-event" data-color="#b6c2c9">
+                <div class="fc-event" data-sched_id="9" data-color="#b6c2c9">
                     <div class="fc-event-text">Other Event 5</div>
                     <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
                 </div>
@@ -103,8 +99,8 @@
                             <hr>
                             <div class="mb-3">
                                 <label class="form-label" for="exampleInputEmail1">Date</label>
-                                <div class="input-group date" id="datepicker-disabled-past"
-                                    data-date-format="yyyy-m-d" data-date-start-date="Date.default">
+                                <div class="input-group date" id="datepicker-disabled-past" data-date-format="yyyy-m-d"
+                                    data-date-start-date="Date.default">
                                     <input type="text" class="form-control form-control-sm" placeholder="Select Date" />
                                     <span class="input-group-text input-group-addon"><i
                                             class="fa fa-calendar"></i></span>
@@ -131,11 +127,13 @@
                         <div class="col-7">
                             <div class="mb-3">
                                 <label class="form-label">Venue:</label>
-                                <input class="form-control form-control-sm" type="text" placeholder="venue..." />
+                                <input class="form-control form-control-sm venue" id="venue" type="text"
+                                    placeholder="venue..." />
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Address:</label>
-                                <input class="form-control form-control-sm" type="text" placeholder="address..." />
+                                <input class="form-control form-control-sm address" id="address" type="text"
+                                    placeholder="address..." />
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Purpose:</label>
@@ -178,7 +176,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">If others, please specify:</label>
-                                <input class="form-control form-control-sm" type="text"
+                                <input class="form-control form-control-sm others" type="text"
                                     placeholder="if others, please specify..." />
                             </div>
                         </div>
@@ -187,7 +185,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="javascript:;" class="btn btn-white btn-xs" data-bs-dismiss="modal">Close</a>
-                    <a href="javascript:;" class="btn btn-primary btn-xs">Action</a>
+                    <a href="javascript:;" class="btn btn-primary btn-xs" id="save-schedule">Action</a>
                 </div>
             </div>
         </div>
@@ -206,7 +204,8 @@
                         <label class="form-label" for="exampleInputEmail1">Date</label>
                         <div class="input-group date" id="datepicker-mass" data-date-format="yyyy-m-d"
                             data-date-start-date="Date.default">
-                            <input type="text" class="form-control form-control-sm" placeholder="Select Date" />
+                            <input type="text" class="form-control form-control-sm" id="datepicker-mass-input"
+                                placeholder="Select Date" />
                             <span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
@@ -233,24 +232,27 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Assign a priest:</label>
-                        <select class="form-select">
+                        <select class="form-select" id="priest-select">
                             <option value="" selected>Choose a priest</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                            @foreach(get_all_priest() as $priest)
+
+                            <option value="{{ $priest->id }}">{{ $priest->name }}</option>
+                            @endforeach
+
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <a href="javascript:;" class="btn btn-white btn-xs" data-bs-dismiss="modal">Close</a>
-                    <a href="javascript:;" class="btn btn-success btn-xs">Action</a>
+                    <a href="javascript:;" class="btn btn-success btn-xs" id="save-event-btn">Save</a>
                 </div>
             </div>
         </div>
     </div>
     <!-- END page-header -->
 </div>
+
+
 <!-- END row -->
 @endsection
 
@@ -259,14 +261,140 @@
 <script>
 $('#schedules').addClass('active');
 
+$(document).on('click', '#save-schedule', function() {
+    const data = {
+        date: $('#datepicker-disabled-past input').val(),
+        time_from: $('#timepicker-from').val(),
+        time_to: $('#timepicker-to').val(),
+        venue: $('.venue').val(),
+        address: $('.address').val(),
+        purpose: $('input[name="flexRadioDefault"]:checked').attr('id'),
+        others: $('.others').val(),
+        sched_type: 'own_sched',
+        assign_to: '',
+        _token: $('meta[name="csrf-token"]').attr('content'),
+    };
+
+    $.ajax({
+        url: '{{ route("schedules.store") }}',
+        method: 'POST',
+        data: data,
+        success: function(response) {
+            alert(response.message);
+            location.reload(); // Reload the page or update the DOM dynamically
+        },
+        error: function(xhr) {
+            alert('An error occurred: ' + xhr.responseText);
+        },
+    });
+});
+
+$('#save-event-btn').on('click', function() {
+    var selectedDate = $('#datepicker-mass-input').val();
+    var fromTime = $('#timepicker-mass-from').val();
+    var toTime = $('#timepicker-mass-to').val();
+    var priestId = $('#priest-select').val();
+
+    // Validate data
+    
+
+
+    // Send data using AJAX
+    $.ajax({
+        url: '{{ route("schedules.store") }}',
+        method: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            date: selectedDate,
+            time_from: fromTime,
+            time_to: toTime,
+            assign_to: priestId,
+            sched_type: 'mass_sched',
+        },
+        success: function(response) {
+            if (response.success) {
+                alert('Event saved successfully.');
+                // Optionally, you can close the modal or reset the form here
+                $('#datepicker').val('');
+                $('#timepicker-mass-from').val('');
+                $('#timepicker-mass-to').val('');
+                $('#priest-select').val('');
+                // Close modal
+                $('[data-bs-dismiss="modal"]').click();
+            } else {
+                alert('Error saving event: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('An error occurred: ' + error);
+        }
+    });
+});
+
+// var handleCalendarDemo = function() {
+//     // external events
+//     var containerEl = document.getElementById('external-events');
+//     var Draggable = FullCalendar.Interaction.Draggable;
+//     new Draggable(containerEl, {
+//         itemSelector: '.fc-event',
+//         eventData: function(eventEl) {
+
+//             return {
+//                 title: eventEl.innerText,
+//                 color: eventEl.getAttribute('data-color')
+//             };
+//         }
+//     });
+
+//     // fullcalendar
+
+//     var d = new Date();
+//     var month = d.getMonth() + 1;
+//     month = (month < 10) ? '0' + month : month;
+//     var year = d.getFullYear();
+//     var day = d.getDate();
+//     var today = moment().startOf('day');
+//     var calendarElm = document.getElementById('calendar');
+//     var calendar = new FullCalendar.Calendar(calendarElm, {
+//         headerToolbar: {
+//             left: 'dayGridMonth,timeGridWeek,timeGridDay',
+//             center: 'title',
+//             right: 'prev,next today'
+//         },
+//         buttonText: {
+//             today: 'Today',
+//             month: 'Month',
+//             week: 'Week',
+//             day: 'Day'
+//         },
+//         initialView: 'dayGridMonth',
+//         editable: true,
+//         droppable: true,
+//         themeSystem: 'bootstrap',
+//         events: []
+//     });
+
+//     calendar.render();
+
+
+// };
+
+// Baptism
+// Wedding
+// Funeral
+// Confirmation
+// Personal
+
+
+
+
+
 var handleCalendarDemo = function() {
-    // external events
     var containerEl = document.getElementById('external-events');
     var Draggable = FullCalendar.Interaction.Draggable;
     new Draggable(containerEl, {
         itemSelector: '.fc-event',
         eventData: function(eventEl) {
-
             return {
                 title: eventEl.innerText,
                 color: eventEl.getAttribute('data-color')
@@ -274,14 +402,6 @@ var handleCalendarDemo = function() {
         }
     });
 
-    // fullcalendar
-
-    var d = new Date();
-    var month = d.getMonth() + 1;
-    month = (month < 10) ? '0' + month : month;
-    var year = d.getFullYear();
-    var day = d.getDate();
-    var today = moment().startOf('day');
     var calendarElm = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarElm, {
         headerToolbar: {
@@ -289,99 +409,234 @@ var handleCalendarDemo = function() {
             center: 'title',
             right: 'prev,next today'
         },
-        buttonText: {
-            today: 'Today',
-            month: 'Month',
-            week: 'Week',
-            day: 'Day'
-        },
         initialView: 'dayGridMonth',
         editable: true,
         droppable: true,
         themeSystem: 'bootstrap',
-        events: [{
-            title: 'Trip to London',
-            start: year + '-' + month + '-01',
-            end: year + '-' + month + '-05',
-            color: app.color.success
-        }, {
-            title: 'Meet with Irene Wong',
-            start: year + '-' + month + '-02T06:00:00',
-            color: app.color.blue
-        }, {
-            title: 'Mobile Apps Brainstorming',
-            start: year + '-' + month + '-10',
-            end: year + '-' + month + '-12',
-            color: app.color.pink
-        }, {
-            title: 'Stonehenge, Windsor Castle, Oxford',
-            start: year + '-' + month + '-05T08:45:00',
-            end: year + '-' + month + '-06T18:00',
-            color: app.color.indigo
-        }, {
-            title: 'Paris Trip',
-            start: year + '-' + month + '-12',
-            end: year + '-' + month + '-16'
-        }, {
-            title: 'Domain name due',
-            start: year + '-' + month + '-15',
-            color: app.color.blue
-        }, {
-            title: 'Cambridge Trip',
-            start: year + '-' + month + '-19'
-        }, {
-            title: 'Visit Apple Company',
-            start: year + '-' + month + '-22T05:00:00',
-            color: app.color.success
-        }, {
-            title: 'Exercise Class',
-            start: year + '-' + month + '-22T07:30:00',
-            color: app.color.orange
-        }, {
-            title: 'Live Recording',
-            start: year + '-' + month + '-22T03:00:00',
-            color: app.color.blue
-        }, {
-            title: 'Announcement',
-            start: year + '-' + month + '-22T15:00:00',
-            color: app.color.red
-        }, {
-            title: 'Dinner',
-            start: year + '-' + month + '-22T18:00:00'
-        }, {
-            title: 'New Android App Discussion',
-            start: year + '-' + month + '-25T08:00:00',
-            end: year + '-' + month + '-25T10:00:00',
-            color: app.color.red
-        }, {
-            title: 'Marketing Plan Presentation',
-            start: year + '-' + month + '-25T12:00:00',
-            end: year + '-' + month + '-25T14:00:00',
-            color: app.color.blue
-        }, {
-            title: 'Chase due',
-            start: year + '-' + month + '-26T12:00:00',
-            color: app.color.orange
-        }, {
-            title: 'Heartguard',
-            start: year + '-' + month + '-26T08:00:00',
-            color: app.color.orange
-        }, {
-            title: 'Lunch with Richard',
-            start: year + '-' + month + '-28T14:00:00',
-            color: app.color.blue
-        }, {
-            title: 'Web Hosting due',
-            start: year + '-' + month + '-30',
-            color: app.color.blue
-        }]
+        events: getEvets(),
+        drop: function(info) {
+            saveEvent({
+                schedule_id: info.draggedEl.getAttribute('data-sched_id'),
+                title: info.draggedEl.innerText,
+                start: info.dateStr,
+                color: info.draggedEl.getAttribute('data-color')
+            });
+        },
+
+        eventResize: function(info) {
+            console.log('eventResize :', info.event.id);
+
+            // saveEvent({
+            //     id: info.event.id, 
+            //     title: info.event.title,
+            //     start: info.event.start.toISOString(),
+            //     end: info.event.end ? info.event.end.toISOString() : null,
+            //     color: info.event.backgroundColor
+            // });
+        },
+        eventDrop: function(info) {
+            console.log('eventDrop :', info.event.title);
+            // saveEvent({
+            //     id: info.event.id,
+            //     title: info.event.title,
+            //     start: info.event.start.toISOString(),
+            //     end: info.event.end ? info.event.end.toISOString() : null,
+            //     color: info.event.backgroundColor
+            // });
+        }
     });
 
     calendar.render();
 
-    console.log('eventEl ::', calendar);
+    function getEvets() {
+        let ret = {};
+        $.ajax({
+            url: '/get-events',
+            method: 'GET',
+            async: false,
+            success: function(data) {
 
+                if (typeof data === 'string') {
+                    try {
+                        const parsedData = JSON.parse(data);
+                        ret = parsedData;
+                        console.log("Parsed data:", parsedData);
+                    } catch (error) {
+                        console.error("JSON parsing error:", error);
+                    }
+                } else {
+                    ret = data;
+
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+            }
+        });
+        return ret;
+    }
+
+
+    function saveEvent(eventData) {
+
+        $.ajax({
+            url: '/save-event',
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                ...eventData
+            },
+            success: function(response) {
+
+                console.log(response);
+
+            },
+            error: function(xhr) {
+                console.error(xhr.responseJSON.error);
+
+            }
+        });
+    }
 };
+
+
+
+// var handleCalendarDemo = function() {
+//     // external events
+//     var containerEl = document.getElementById('external-events');
+//     var Draggable = FullCalendar.Interaction.Draggable;
+//     new Draggable(containerEl, {
+//         itemSelector: '.fc-event',
+//         eventData: function(eventEl) {
+
+//             return {
+//                 title: eventEl.innerText,
+//                 color: eventEl.getAttribute('data-color')
+//             };
+//         }
+//     });
+
+//     // fullcalendar
+
+//     var d = new Date();
+//     var month = d.getMonth() + 1;
+//     month = (month < 10) ? '0' + month : month;
+//     var year = d.getFullYear();
+//     var day = d.getDate();
+//     var today = moment().startOf('day');
+//     var calendarElm = document.getElementById('calendar');
+//     var calendar = new FullCalendar.Calendar(calendarElm, {
+//         headerToolbar: {
+//             left: 'dayGridMonth,timeGridWeek,timeGridDay',
+//             center: 'title',
+//             right: 'prev,next today'
+//         },
+//         buttonText: {
+//             today: 'Today',
+//             month: 'Month',
+//             week: 'Week',
+//             day: 'Day'
+//         },
+//         initialView: 'dayGridMonth',
+//         editable: true,
+//         droppable: true,
+//         themeSystem: 'bootstrap',
+//         events: getEvets(),
+//         drop: function(info) {
+//             let pa = {
+//             title: 'Trip to London',
+//             start: year + '-' + month + '-01',
+//             color: app.color.success
+//         }
+//         console.log('pa', pa);
+
+//             console.log('drop', info);
+
+//             saveEvent({
+//                 schedule_id: info.draggedEl.getAttribute('data-sched_id'),
+//                 title: info.draggedEl.innerText,
+//                 start: info.dateStr,
+//                 color: info.draggedEl.getAttribute('data-color')
+//             });
+//         },
+//         eventResize: function(info) {
+//             console.log('eventResize');
+//             saveEvent({
+//                 id: info.event.id,
+//                 title: info.event.title,
+//                 start: info.event.start.toISOString(),
+//                 end: info.event.end ? info.event.end.toISOString() : null,
+//                 color: info.event.backgroundColor
+//             });
+//         },
+//         eventDrop: function(info) {
+//             console.log('eventDrop');
+//             saveEvent({
+//                 id: info.event.id,
+//                 title: info.event.title,
+//                 start: info.event.start.toISOString(),
+//                 end: info.event.end ? info.event.end.toISOString() : null,
+//                 color: info.event.backgroundColor
+//             });
+//         }
+//     });
+
+//     calendar.render();
+
+//     getEvets();
+//     function getEvets() {
+//         let ret = {};
+//         $.ajax({
+//             url: '/get-events',
+//             method: 'GET',
+//             async: false, // Make the request synchronous
+//             success: function(data) {
+//                 console.log("Raw data:", data);
+//                 // Safely parse only if it's a JSON string
+//                 if (typeof data === 'string') {
+//                     try {
+//                         const parsedData = JSON.parse(data);
+//                         console.log("Parsed data:", parsedData);
+//                     } catch (error) {
+//                         console.error("JSON parsing error:", error);
+//                     }
+//                 } else {
+//                     ret = data;
+//                     console.log("Data is already an object:", data);
+//                 }
+//             },
+//             error: function(xhr) {
+//                 console.error(xhr.responseText);
+//             }
+//         });
+//         return ret; // This will now contain the correct value
+//     }
+
+
+//     function saveEvent(eventData) {
+
+//         $.ajax({
+//             url: '/save-event',
+//             method: 'POST',
+//             data: {
+//                 _token: $('meta[name="csrf-token"]').attr('content'),
+//                 ...eventData
+//             },
+//             success: function(response) {
+//                 // alert(response.message);
+//                 console.log(response);
+
+//             },
+//             error: function(xhr) {
+//                 console.error(xhr.responseJSON.error);
+
+//             }
+//         });
+//     }
+
+//     console.log('eventEl ::', calendar);
+
+// };
 
 var Calendar = function() {
     "use strict";
@@ -402,7 +657,8 @@ $("#datepicker-disabled-past").datepicker({
 });
 
 $("#datepicker-mass").datepicker({
-    todayHighlight: true
+    format: 'yyyy-mm-dd',
+    autoclose: true
 });
 
 $("#timepicker-from").timepicker();
