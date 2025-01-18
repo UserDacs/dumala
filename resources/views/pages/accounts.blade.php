@@ -260,8 +260,12 @@
                                         <div class="form-floating mb-0 mb-md-0">
                                             <select class="form-control fs-15px" id="role" name="role"
                                                 style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important;">
-                                                <option value="user">User</option>
                                                 <option value="admin">Admin</option>
+                                                <option value="parish_priest">Parish priest</option>
+                                                <option value="secretary">Secretary</option>
+                                                <option value="priest">Priest</option>
+                                                <option value="parishioners">Parishioners</option>
+                                                <option value="non_parishioners">Non-parishioners</option>
                                             </select>
                                             <label for="role" class="d-flex align-items-center fs-13px">User
                                                 Role</label>
@@ -329,7 +333,8 @@
                                     <div class="col-3">
                                         <div class="form-floating mb-0 mb-md-0">
                                             <input type="text" class="form-control fs-15px" id="editPrefix"
-                                                name="prefix" placeholder="Prefix" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                                name="prefix" placeholder="Prefix"
+                                                style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
                                             <label for="editPrefix"
                                                 class="d-flex align-items-center fs-13px">Prefix</label>
                                         </div>
@@ -337,7 +342,8 @@
                                     <div class="col-9">
                                         <div class="form-floating mb-0 mb-md-0">
                                             <input type="text" class="form-control fs-15px" id="editFirstname"
-                                                name="firstname" placeholder="First Name" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                                name="firstname" placeholder="First Name"
+                                                style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
                                             <label for="editFirstname" class="d-flex align-items-center fs-13px">First
                                                 Name</label>
                                         </div>
@@ -345,16 +351,22 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-0 mb-md-0">
                                             <input type="text" class="form-control fs-15px" id="editLastname"
-                                                name="lastname" placeholder="Last Name" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                                name="lastname" placeholder="Last Name"
+                                                style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
                                             <label for="editLastname" class="d-flex align-items-center fs-13px">Last
                                                 Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-0 mb-md-0">
-                                            <select class="form-control fs-15px" id="editRole" name="role" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important;">
-                                                <option value="user">User</option>
+                                            <select class="form-control fs-15px" id="editRole" name="role"
+                                                style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important;">
                                                 <option value="admin">Admin</option>
+                                                <option value="parish_priest">Parish priest</option>
+                                                <option value="secretary">Secretary</option>
+                                                <option value="priest">Priest</option>
+                                                <option value="parishioners">Parishioners</option>
+                                                <option value="non_parishioners">Non-parishioners</option>
                                             </select>
                                             <label for="editRole" class="d-flex align-items-center fs-13px">User
                                                 Role</label>
@@ -364,7 +376,8 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-0 mb-md-0">
                                             <input type="text" class="form-control fs-15px" id="editContact"
-                                                name="contact" placeholder="Contact Number" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                                name="contact" placeholder="Contact Number"
+                                                style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
                                             <label for="editContact" class="d-flex align-items-center fs-13px">Contact
                                                 Number</label>
                                         </div>
@@ -372,7 +385,8 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-0 mb-md-0">
                                             <input type="email" class="form-control fs-15px" id="editEmail" name="email"
-                                                placeholder="Email" style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
+                                                placeholder="Email"
+                                                style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
                                             <label for="editEmail" class="d-flex align-items-center fs-13px">Email
                                                 Address</label>
                                         </div>
@@ -392,6 +406,7 @@
     </div>
 
 </div>
+
 @endsection
 
 @push('scripts')
@@ -458,10 +473,15 @@ $(document).ready(function() {
             processData: false,
             success: function(response) {
                 getList(null);
-                alert(response.message);
+                message({
+                    title: 'Success!',
+                    message: response.message,
+                    icon: 'success'
+                });
+
                 $('#modal-dialog-add').modal('hide');
                 $('#addAccountForm')[0].reset();
-                
+
             },
             error: function(xhr) {
                 alert('Error: ' + xhr.responseJSON.message);
@@ -483,8 +503,9 @@ function openEditModal(userId) {
             $('#editRole').val(response.data.role);
             $('#editContact').val(response.data.contact);
             $('#editEmail').val(response.data.email);
-            $('#editProfileImage').attr('src', response.data.profile_image || '/assets/img/user/user-12.jpg');
-            
+            $('#editProfileImage').attr('src', response.data.profile_image ||
+                '/assets/img/user/user-12.jpg');
+
             // Store the user ID in a hidden field for form submission
             $('#editAccountForm').data('userId', userId);
 
@@ -511,16 +532,20 @@ $('#editAccountForm').on('submit', function(event) {
         processData: false,
         dataType: 'json',
         success: function(response) {
-            console.log("response ::", response);
-            
             if (response.success) {
-                // Close modal
-                $('#modal-dialog-edit').modal('hide');
-                alert('Account updated successfully!');
-                // Optionally reload the user list or refresh specific row
+                message({
+                    title: 'Success!',
+                    message: 'Account updated successfully!',
+                    icon: 'success'
+                });
+
                 getList(null);
             } else {
-                alert('Failed to update account.');
+                message({
+                    title: 'Error!',
+                    message: 'Failed to update account.',
+                    icon: 'error'
+                });
             }
         },
         error: function(xhr, status, error) {
@@ -570,7 +595,7 @@ function getList(search, url = '/user-list') {
                         <tr>
                             <td width="1%" class="fw-bold">${index + 1}</td>
                             <td width="1%" class="with-img">${profileImage}</td>
-                            <td>${user.firstname} ${user.lastname}</td>
+                            <td>${user.prefix ? user.prefix+'.': ''} ${user.firstname} ${user.lastname}</td>
                             <td>${user.role}</td>
                             <td>${statusSwitch}</td>
                             <td style="text-align: right; padding-right: 50px">
@@ -579,7 +604,7 @@ function getList(search, url = '/user-list') {
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a href="#" class="dropdown-item" onclick="openEditModal(${user.id})">Edit</a>
-                                    <a href="#" class="dropdown-item">Delete</a>
+                                    <a href="#" onclick="delete_user(${user.id})" class="dropdown-item">Delete</a>
                                 </div>
                             </td>
                         </tr>
@@ -615,9 +640,9 @@ function getList(search, url = '/user-list') {
 // Handle pagination button click
 function handlePaginationClick(event) {
     event.preventDefault();
-    const url = $(event.target).data('url'); // Get the URL for the next page
-    const search = $('#search-input').val(); // Get the current search term (if any)
-    getList(search, url); // Pass the search term and the new URL for pagination
+    const url = $(event.target).data('url');
+    const search = $('#search-input').val();
+    getList(search, url);
 }
 
 function updateSwitchText(id) {
@@ -628,7 +653,71 @@ function updateSwitchText(id) {
     $(`.switch-text${id}`).attr('title', statusText);
     $(`.switch-text${id}`).text(statusText);
 
-    console.log(`Switch ${id} is now ${statusText}`);
+    $.ajax({
+        url: `/user/${id}/update_status`,
+        method: 'POST',
+        data: {
+            user_status: statusText_save_data
+        },
+        dataType: 'json',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+
+            if (response.success) {
+                message({
+                    title: 'Success!',
+                    message: 'Account ' + statusText + ' successfully!',
+                    icon: 'success'
+                });
+
+                getList(null);
+            } else {
+                message({
+                    title: 'Error!',
+                    message: 'Failed to update account.',
+                    icon: 'error'
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error updating user:', error);
+        }
+    });
+
+}
+
+function delete_user(id) {
+    $.ajax({
+        url: `/user/${id}/delete`,
+        method: 'POST',
+        dataType: 'json',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+
+            if (response.success) {
+
+                message({
+                    title: 'Success!',
+                    message: 'Account delete successfully!',
+                    icon: 'success'
+                });
+                getList(null);
+            } else {
+                message({
+                    title: 'Error!',
+                    message: 'Failed to delete account.',
+                    icon: 'error'
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error updating user:', error);
+        }
+    });
 }
 </script>
 @endpush

@@ -144,5 +144,97 @@ $(document).ready(function() {
     });
 
 });
+
+
+var handleCalendarDemo = function() {
+    var containerEl = document.getElementById('external-events');
+    var Draggable = FullCalendar.Interaction.Draggable;
+    
+
+    var calendarElm = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarElm, {
+        headerToolbar: {
+            left: 'dayGridMonth,timeGridWeek,timeGridDay',
+            center: 'title',
+            right: 'prev,next today'
+        },
+        initialView: 'dayGridMonth',
+        editable: false, // Set to false to disable editing
+        droppable: false, // Disable event dropping
+        themeSystem: 'bootstrap',
+        events: getEvets(),
+
+  
+    });
+
+    calendar.render();
+
+    function getEvets() {
+        let ret = {};
+        $.ajax({
+            url: '/get-events',
+            method: 'GET',
+            async: false,
+            success: function(data) {
+                if (typeof data === 'string') {
+                    try {
+                        const parsedData = JSON.parse(data);
+                        ret = parsedData.map(event => {
+                            const date = new Date(event.start);
+                            event.startFormatted = date.toLocaleString('en-US', {
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                hour12: true
+                            });
+                            return event;
+                        });
+                    } catch (error) {
+                        console.error("JSON parsing error:", error);
+                    }
+                } else {
+                    ret = data.map(event => {
+                        const date = new Date(event.start);
+                        event.startFormatted = date.toLocaleString('en-US', {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                        return event;
+                    });
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+            }
+        });
+        return ret;
+    }
+
+    function saveEvent(eventData) {
+        $.ajax({
+            url: '/save-event',
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                ...eventData
+            },
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(xhr) {
+                console.error(xhr.responseJSON.error);
+            }
+        });
+    }
+};
+
+var Calendar = function() {
+    "use strict";
+    return {
+        init: function() {
+            handleCalendarDemo();
+        }
+    };
+}();
 </script>
 @endpush

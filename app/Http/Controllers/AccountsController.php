@@ -8,10 +8,7 @@ use App\Http\Resources\UserResource;
 
 class AccountsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+ 
     /**
      * Display a listing of the resource.
      */
@@ -93,6 +90,8 @@ class AccountsController extends Controller
         if ($request->hasFile('profile_image')) {
 
             $imagePath = '/storage/' . $request->file('profile_image')->store('profile_images', 'public');
+        }else{
+            $imagePath = '/assets/img/user/user-profile-icon.jpg';
         }
 
 
@@ -114,11 +113,34 @@ class AccountsController extends Controller
         ]);
     }
 
+    public function update_status(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+
+        $user->update([
+            'user_status' => $request->input('user_status')
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully!',
+            'user' => $user,
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($userId)
     {
-        //
+        $user = User::findOrFail($userId);
+
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully!'
+        ]);
+       
     }
 }

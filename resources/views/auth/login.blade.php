@@ -39,7 +39,7 @@
                     <div class="invalid-feedback" id="emailError"></div>
                 </div>
                 <div class="form-floating mb-20px position-relative">
-                    <input type="password" name="password" class="form-control fs-13px h-45px border-0" 
+                    <input type="password" name="password" class="form-control fs-13px h-45px border-0"
                         placeholder="Password" id="password" />
                     <label for="password" class="d-flex align-items-center text-gray-600 fs-13px">Password</label>
                     <div class="invalid-feedback" id="passwordError"></div>
@@ -91,55 +91,45 @@ $(document).ready(function() {
 
         // Send AJAX request
         $.ajax({
-            url: '{{ route("login") }}',
+            url: '/user/login',
             method: 'POST',
             data: formData,
             success: function(response) {
-                // Handle success
-                $('#loginMessage')
-                    .addClass('alert-success')
-                    .html('Login successful! Redirecting...')
-                    .show();
 
-                // Redirect to the intended page
-                setTimeout(function() {
-                    window.location.href = response.redirect || '/';
-                }, 1000);
-            },
-            error: function(xhr) {
-                // Handle error
-                if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    let errors = xhr.responseJSON.errors;
-                    // Add 'is-invalid' and display error messages
-                    if (errors.email) {
-                        $('#email').addClass('is-invalid');
-                        $('#emailError').html(errors.email[0]);
-                    }
-                    if (errors.password) {
-                        $('#password').addClass('is-invalid');
-                        $('#passwordError').html(errors.password[0]);
-                    }
-
-                } else {
-                    // swal({
-                    //     title: "Error!",
-                    //     text: "An unexpected error occurred. Please try again.",
-                    //     icon: "error",
-                    //     buttons: false, 
-                    //     timer: 2000,   
-                    // });
+                if (response.field == 1) {
+                    // Handle success
                     $('#loginMessage')
-                        .addClass('alert-danger')
-                        .html('An unexpected error occurred. Please try again.')
+                        .addClass('alert-success')
+                        .html(response.message)
                         .show();
 
-                  
+                    setTimeout(function() {
+                        window.location.href = response.redirect || '/';
+                    }, 1000);
+                } else if (response.field == 2) {
+                    $('#password').val('');
+                    $('#loginMessage')
+                        .addClass('alert-danger')
+                        .html(response.message)
+                        .show();
+
+                } else if (response.field == 4) {
+                    $('#email').val('');
+                    $('#loginMessage')
+                        .addClass('alert-danger')
+                        .html(response.message)
+                        .show();
+                } else {
+                    $('#loginMessage')
+                        .addClass('alert-danger')
+                        .html(response.message)
+                        .show();
                 }
             }
         });
     });
 
-    $('#togglePasswordIcon').on('click', function () {
+    $('#togglePasswordIcon').on('click', function() {
         const passwordInput = $('#password');
         const icon = $(this);
 
