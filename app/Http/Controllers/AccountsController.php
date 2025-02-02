@@ -77,7 +77,7 @@ class AccountsController extends Controller
             'prefix' => 'nullable|string|max:10',
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
-            'role' => 'required|string|in:user,admin',
+            'role' => 'required|string',
             'contact' => 'required|string|max:15',
             'email' => 'required|string|email|unique:users,email,' . $userId,
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -90,8 +90,6 @@ class AccountsController extends Controller
         if ($request->hasFile('profile_image')) {
 
             $imagePath = '/storage/' . $request->file('profile_image')->store('profile_images', 'public');
-        }else{
-            $imagePath = '/assets/img/user/user-profile-icon.jpg';
         }
 
 

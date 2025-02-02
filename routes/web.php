@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -55,5 +56,30 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/schedules-store', [App\Http\Controllers\ScheduleController::class, 'store'])->name('schedules.store');
 
+    Route::post('/assign_priest', [App\Http\Controllers\ScheduleController::class, 'assign_priest'])->name('assign_priest');
+
     Route::post('/change-password', [UserController::class, 'changePassword']);
+
+    Route::get('/list-request', [App\Http\Controllers\RequestController::class, 'getListSched'])->name('list-request');
 });
+
+Route::get('/notifications', function () {
+    return auth()->user()->unreadNotifications;
+})->middleware('auth');
+
+Route::get('/notifications-count', function () {
+
+    $user = Auth::user();
+
+    if (!$user) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+    $unreadCount = $user->unreadNotifications()->count();
+
+    return $unreadCount;
+})->middleware('auth');
+
+Route::post('/notifications/read/{id}', function ($id) {
+    auth()->user()->notifications()->find($id)->markAsRead();
+    return response()->json(['message' => 'Notification marked as read.']);
+})->middleware('auth');

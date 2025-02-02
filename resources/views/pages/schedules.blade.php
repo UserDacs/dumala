@@ -138,37 +138,37 @@
                             <div class="mb-3">
                                 <label class="form-label">Purpose:</label>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="baptism">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="baptism" data-val="Baptism">
                                     <label class="form-check-label" for="baptism">
                                         Baptism
                                     </label>
                                 </div>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="wedding1">
-                                    <label class="form-check-label" for="wedding1">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="wedding" data-val="Wedding">
+                                    <label class="form-check-label" for="wedding">
                                         Wedding
                                     </label>
                                 </div>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="funeral">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="funeral" data-val="Funeral">
                                     <label class="form-check-label" for="funeral">
                                         Funeral
                                     </label>
                                 </div>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="confirm1">
-                                    <label class="form-check-label" for="confirm1">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="confirm" data-val="Confirmation">
+                                    <label class="form-check-label" for="confirm">
                                         Confirmation
                                     </label>
                                 </div>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="personal1">
-                                    <label class="form-check-label" for="personal1">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="personal" data-val="Personal">
+                                    <label class="form-check-label" for="personal" data-val="Personal">
                                         Personal
                                     </label>
                                 </div>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="others1">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="others1"  data-val="Others">
                                     <label class="form-check-label" for="others1">
                                         Others
                                     </label>
@@ -268,7 +268,7 @@ $(document).on('click', '#save-schedule', function() {
         time_to: $('#timepicker-to').val(),
         venue: $('.venue').val(),
         address: $('.address').val(),
-        purpose: $('input[name="flexRadioDefault"]:checked').attr('id'),
+        purpose: $('input[name="flexRadioDefault"]:checked').attr('data-val'),
         others: $('.others').val(),
         sched_type: 'own_sched',
         assign_to: '',

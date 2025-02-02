@@ -20,6 +20,11 @@
     <link href="{{ asset('assets/plugins/gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
 
     <link href="{{ asset('assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}" rel="stylesheet" />
+    <style>
+    .ck-editor__main {
+        border: 1px solid #d2d3d3 !important;
+    }
+    </style>
     <!-- ================== END page-css ================== -->
     @stack('style-file')
 
@@ -74,6 +79,8 @@
     <script src="{{ asset('assets/js/demo/render.highlight.js') }}"></script>
     <script src="{{ asset('assets/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
 
+    <script src="{{ asset('assets/plugins/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
+
 
     <script>
     function message(params) {
@@ -111,6 +118,7 @@
 </head>
 
 <body class="pace-done theme-green">
+
     <!-- BEGIN #loader -->
     <div id="loader" class="app-loader">
         <span class="spinner"></span>
@@ -211,6 +219,24 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
                 </div>
                 <div class="modal-body">
+                    <ul id="notification-list"></ul>
+
+                    <form id="notification-form">
+                        <meta name="csrf-token" content="{{ csrf_token() }}">
+                        <div>
+                            <label for="notification-title">Title</label>
+                            <input type="text" id="notification-title" name="title">
+                        </div>
+                        <div>
+                            <label for="notification-body">Body</label>
+                            <textarea id="notification-body" name="body"></textarea>
+                        </div>
+                        <div>
+                            <label for="user-id">User ID</label>
+                            <input type="number" id="user-id" name="user_id">
+                        </div>
+                        <button type="button" id="send-notification-btn">Send Notification</button>
+                    </form>
                     <div class="mb-3">
                         <label class="form-label" for="old_password">Old password</label>
                         <div class="input-group mb-3">
@@ -291,7 +317,8 @@
                                             <input type="text" class="form-control fs-15px" id="editFirstnameProfile"
                                                 name="firstname" placeholder="First Name"
                                                 style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
-                                            <label for="editFirstnameProfile" class="d-flex align-items-center fs-13px">First
+                                            <label for="editFirstnameProfile"
+                                                class="d-flex align-items-center fs-13px">First
                                                 Name</label>
                                         </div>
                                     </div>
@@ -300,7 +327,8 @@
                                             <input type="text" class="form-control fs-15px" id="editLastnameProfile"
                                                 name="lastname" placeholder="Last Name"
                                                 style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
-                                            <label for="editLastnameProfile" class="d-flex align-items-center fs-13px">Last
+                                            <label for="editLastnameProfile"
+                                                class="d-flex align-items-center fs-13px">Last
                                                 Name</label>
                                         </div>
                                     </div>
@@ -325,16 +353,18 @@
                                             <input type="text" class="form-control fs-15px" id="editContactProfile"
                                                 name="contact" placeholder="Contact Number"
                                                 style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
-                                            <label for="editContactProfile" class="d-flex align-items-center fs-13px">Contact
+                                            <label for="editContactProfile"
+                                                class="d-flex align-items-center fs-13px">Contact
                                                 Number</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-0 mb-md-0">
-                                            <input type="email" class="form-control fs-15px" id="editEmailProfile" name="email"
-                                                placeholder="Email"
+                                            <input type="email" class="form-control fs-15px" id="editEmailProfile"
+                                                name="email" placeholder="Email"
                                                 style="border-bottom: 1px solid gray !important; border-top: 0px !important; border-right: 0px !important; border-left: 0px !important; border-radius: 0px !important; ">
-                                            <label for="editEmailProfile" class="d-flex align-items-center fs-13px">Email
+                                            <label for="editEmailProfile"
+                                                class="d-flex align-items-center fs-13px">Email
                                                 Address</label>
                                         </div>
                                     </div>
@@ -473,7 +503,7 @@
 
     function openEditModalv(userId) {
         console.log(userId);
-        
+
         $.ajax({
             url: `/user/${userId}/edit`, // Replace with your URL
             method: 'GET',
@@ -524,7 +554,7 @@
                     });
 
                     getList(null);
-                    
+
                 } else {
                     message({
                         title: 'Error!',
@@ -536,6 +566,145 @@
             error: function(xhr, status, error) {
                 console.error('Error updating user:', error);
             }
+        });
+    });
+    function formatRelativeTime(createdAt) {
+        // Parse the createdAt string into a JavaScript Date object
+        const createdDate = new Date(createdAt);
+        const currentDate = new Date();
+
+        // Calculate the difference in milliseconds
+        const diffMs = currentDate - createdDate;
+
+        // Convert milliseconds to time components
+        const diffSeconds = Math.floor(diffMs / 1000); // Total seconds
+        const diffMinutes = Math.floor(diffSeconds / 60); // Total minutes
+        const diffHours = Math.floor(diffMinutes / 60); // Total hours
+        const diffDays = Math.floor(diffHours / 24); // Total days
+
+        // Generate the output based on the time difference
+        if (diffDays > 0) {
+            // More than a day
+            const hours = diffHours % 24; // Hours within the day
+            return `${diffDays} day${diffDays > 1 ? 's' : ''} ${hours} hour${hours !== 1 ? 's' : ''}`;
+        } else if (diffHours > 0) {
+            // More than an hour
+            const minutes = diffMinutes % 60; // Minutes within the hour
+            return `${diffHours} hour${diffHours > 1 ? 's' : ''} ${minutes} min${minutes !== 1 ? 's' : ''}`;
+        } else if (diffMinutes > 0) {
+            // More than a minute
+            const seconds = diffSeconds % 60; // Seconds within the minute
+            return `${diffMinutes} min${diffMinutes !== 1 ? 's' : ''} ${seconds} sec${seconds !== 1 ? 's' : ''}`;
+        } else {
+            // Less than a minute
+            return `${diffSeconds} sec${diffSeconds !== 1 ? 's' : ''}`;
+        }
+    }
+
+    function fetchNotifications() {
+        $.ajax({
+            url: '/notifications',
+            method: 'GET',
+            success: function(data) {
+                let notifications = '';
+
+                if (data.length === 0) {
+                    notifications =
+                        `<div class="dropdown-item text-center text-muted">No notifications</div>`;
+                } else {
+                    data.forEach(notification => {
+                        notifications += `
+                            <a href="${notification.data.url}" class="dropdown-item media" data-id="${notification.id}">
+                                <div class="media-left">
+                                    <img src="${notification.data.image_path? notification.data.image_path: '/assets/img/user/user-profile-icon.jpg'}" class="media-object" alt="" />
+                                </div>
+                                <div class="media-body">
+                                    <h6 class="media-heading">${notification.data.name}</h6>
+                                    <p>${notification.data.title}</p>
+                                    <div class="text-muted fs-10px">${formatRelativeTime(notification.created_at)}</div>
+                                </div> 
+                            </a>
+                        `;
+                    });
+                }
+
+                // Update the notification list
+                $('.list_notify').html(notifications);
+            },
+            error: function() {
+                $('.list_notify').html(
+                    '<div class="dropdown-item text-center text-danger">Error loading notifications</div>'
+                    );
+            }
+        });
+    }
+
+    setInterval(() => {
+        fetchNotifications();
+        getCount();
+    }, 10000);
+    fetchNotifications(); // Fetch on page load
+
+    function getCount() {  
+
+        $.ajax({
+            url: `/notifications-count`, // Replace with your URL
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response == 0) {
+                    $('.noti').html('');
+                    $('.noti_head').html('NOTIFICATIONS (0)');
+                }else{
+                    $('.noti').html('<span class="badge">' + response + '</span>');
+                    $('.noti_head').html('NOTIFICATIONS (' + response + ')');
+                }
+                
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching user data:', error);
+            }
+        });
+    }
+
+    $(document).on('click', '.list_notify a', function(e) {
+        e.preventDefault();
+        const id = $(this).data('id');
+        const url = $(this).attr('href');
+
+        $.ajax({
+            url: `/notifications/read/${id}`,
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function() {
+                window.location.href = url; // Redirect after marking as read
+            }
+        });
+    });
+
+    $('#send-notification-btn').on('click', function() {
+        const data = {
+            title: $('#notification-title').val(),
+            body: $('#notification-body').val(),
+            user_id: $('#user-id').val(),
+        };
+
+        $.ajax({
+            url: '/send-notification',
+            method: 'POST',
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            success: function(response) {
+                alert(response.message);
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON.message);
+            },
         });
     });
     </script>

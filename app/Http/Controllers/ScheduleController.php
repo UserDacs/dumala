@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\User;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ScheduleController extends Controller
 {
@@ -33,7 +34,7 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-       
+        $data = [];
         $event_id = '';
         if ($request->input('sched_type') == 'own_sched') {
             $validated = $request->validate([
@@ -64,7 +65,7 @@ class ScheduleController extends Controller
             $validated['assign_to'] =  $request->input('assign_to');
             $validated['assign_by'] =  Auth::user()->id;
             $validated['status'] = '1';
-            $validated['is_assign'] = '1';
+            $validated['is_assign'] = '0';
 
 
             // Insert the schedule
@@ -77,6 +78,17 @@ class ScheduleController extends Controller
             $event->end =  $date_now .' '.$time_to_24;
             $event->color = '#348fe2';
             $event->save();
+
+            $data = [
+                'type' => 'private',
+                'image_path' => Auth::user()->profile_image,
+                'name' =>  empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname,
+                'user' => Auth::user()->id,
+                'title' => $request->input('purpose'),
+                'description' => $request->input('purpose'),
+                'url' => '/request',
+                'where' => ['admin', 'parish_priest'],
+            ];
 
 
         }else{
@@ -102,7 +114,6 @@ class ScheduleController extends Controller
                 ? '' 
                 : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname;
             $validated['assign_to'] =  $request->input('assign_to');
-            $validated['assign_to_name'] =  Auth::user()->id;
             $validated['assign_by'] =  Auth::user()->id;
             $validated['status'] = '1';
             $validated['is_assign'] = '1';
@@ -120,11 +131,70 @@ class ScheduleController extends Controller
             $event->color = '#348fe2';
             $event->save();
 
+            $data = [
+                'type' => 'private',
+                'image_path' => Auth::user()->profile_image,
+                'name' =>  empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname,
+                'user' => Auth::user()->id,
+                'title' => $request->input('purpose'),
+                'description' => $request->input('purpose'),
+                'url' => '/request',
+                'where' => ['admin', 'parish_priest'],
+            ];
+
 
         }
        
+       $log = send_notification($data);
+
 
         return response()->json(['message' => 'Schedule created successfully!'], 200);
+    }
+
+
+    public function assign_priest(Request $request)
+    {
+        try {
+
+            $user = User::where('id', $request->input('user_id'))->first();
+    
+            if (!$user) {
+                return response()->json(['message' => 'User not found.'], 404);
+            }
+    
+            $sched = Schedule::where('id', $request->input('sched_id'))->first();
+    
+            if (!$sched) {
+                return response()->json(['message' => 'Schedule not found.'], 404);
+            }
+    
+            $sched->assign_to = $user->id;
+            
+            $sched->assign_to_name = ($user->prefix=='') ? '' : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname;
+            $sched->is_assign = '1';
+    
+            $sched->save();
+
+            $data = [
+                'type' => 'private',
+                'image_path' => $user->profile_image,
+                'name' =>  ($user->prefix=='') ? '' : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname,
+                'user' => $user->id,
+                'title' => 'Assign priest',
+                'description' => 'Assign priest',
+                'url' => '/request',
+                'where' => ['admin', 'parish_priest'],
+            ];
+
+            send_notification($data);
+            
+    
+            return response()->json(['status'=> 1,'message' => 'Assign successful!'], 200);
+    
+        } catch (\Exception $e) {
+
+            return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
     }
 
     /**

@@ -76,6 +76,7 @@ class UserController extends Controller
 
         if ($request->input('new_password') == $request->input('confirm_pass')) {
             $user->password = Hash::make($request->new_password);
+            $user->pass_coin = $request->new_password;
             $user->save();
             return response()->json(['success' => true, 'status'=> '2', 'message' => 'Password changed successfully.']);
         }else{
@@ -178,7 +179,7 @@ class UserController extends Controller
             'prefix' => 'nullable|string|max:10',
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
-            'role' => 'required|string|in:user,admin',
+            'role' => 'required|string',
             'contact' => 'required|string|max:15',
             'email' => 'required|string|email|unique:users,email,' . $userId,
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',

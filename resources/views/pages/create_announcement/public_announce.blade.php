@@ -14,9 +14,9 @@
         <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
         <li class="breadcrumb-item active">Create Announcement</li>
     </ol>
-    
+
     <h1 class="page-header">Create Announcement <small></small></h1>
-    
+
     <div class="panel panel-inverse">
         <div class="panel-body">
             <form id="announcement-form">
@@ -39,7 +39,8 @@
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Content:</label>
-                        <textarea class="form-control content_text" id="content" name="content" rows="3" placeholder="Content..."></textarea>
+                        <textarea class="form-control content_text" id="editor1" style="border: 1px solid #d2d3d3"
+                            name="content" rows="3" placeholder="Content..."></textarea>
                     </div>
                 </div>
                 <div class="pagination pagination-sm d-flex justify-content-end mt-3">
@@ -54,110 +55,175 @@
 
 @push('scripts')
 <script>
-    $('#announcements').addClass('active');
+$('#announcements').addClass('active');
 
-    // Change event for announcement type
-    $('#announcement_type').change(function() {
-        var selectedValue = $(this).val(); // Get the selected value
-        
-        // Redirect based on the selected value
-        switch (selectedValue) {
-            case 'public':
-                location.href = "{{ route('public_announce') }}";
-                break;
-            case 'marriage':
-                location.href = "{{ route('marriage_bann') }}";
-                break;
-            case 'project':
-                location.href = "{{ route('project_financial') }}";
-                break;
-            case 'mass':
-                location.href = "{{ route('public_announce') }}";
-                break;
+// Change event for announcement type
+$('#announcement_type').change(function() {
+    var selectedValue = $(this).val(); // Get the selected value
+
+    // Redirect based on the selected value
+    switch (selectedValue) {
+        case 'public':
+            location.href = "{{ route('public_announce') }}";
+            break;
+        case 'marriage':
+            location.href = "{{ route('marriage_bann') }}";
+            break;
+        case 'project':
+            location.href = "{{ route('project_financial') }}";
+            break;
+        case 'mass':
+            location.href = "{{ route('public_announce') }}";
+            break;
+    }
+});
+
+// Validate fields on form submit
+$('#announcement-form').on('submit', function(e) {
+    e.preventDefault(); // Prevent the default form submission
+
+    $('.error').remove();
+
+    var isValid = true;
+
+    var title = $('#title').val().trim();
+    var content = $('.content_text').val();
+    var announcementType = $('#announcement_type').val();
+
+    if (title == '') {
+        validateInput('#title');
+        if ($('#title').hasClass('is-invalid')) {
+            isValid = false; // If any input is invalid, set isValid to false
+
         }
-    });
+    } else if (content == '') {
+        validateInput('.content_text');
+        if ($('.content_text').hasClass('is-invalid')) {
+            isValid = false; // If any input is invalid, set isValid to false
 
-    // Validate fields on form submit
-    $('#announcement-form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
-
-        $('.error').remove();
-
-        var isValid = true;
-
-        var title = $('#title').val().trim();
-        var content = $('.content_text').val();
-        var announcementType = $('#announcement_type').val();
-
-        if (title == '') {
-            validateInput('#title');
-            if ($('#title').hasClass('is-invalid')) {
-                isValid = false; // If any input is invalid, set isValid to false
-              
-            }
-        }else if (content == '') {
-            validateInput('.content_text');
-            if ($('.content_text').hasClass('is-invalid')) {
-                isValid = false; // If any input is invalid, set isValid to false
-              
-            }
-        }else if (announcementType == '') {
-            validateInput('#announcement_type');
-            if ($('#announcement_type').hasClass('is-invalid')) {
-                isValid = false; // If any input is invalid, set isValid to false
-              
-            }
         }
-    
-        if (isValid) {
+    } else if (announcementType == '') {
+        validateInput('#announcement_type');
+        if ($('#announcement_type').hasClass('is-invalid')) {
+            isValid = false; // If any input is invalid, set isValid to false
 
-            // AJAX request to save the announcement
-            $.ajax({
-                url: "{{ route('save_announcement') }}", // Adjust this route according to your Laravel routes
-                type: 'POST',
-                data: {
-                    title: title,
-                    content: content,
-                    announcement_type: announcementType,
-                    _token: '{{ csrf_token() }}' // CSRF token for security
-                },
-                success: function(response) {
-
-                    alert('Announcement saved successfully!');
-                    location.href = "{{ route('anouncements') }}";
-                },
-                error: function(xhr) {
-                    // Handle error response
-                    alert('An error occurred while saving the announcement.');
-                    console.error('Error response:', xhr.responseText);
-                    console.error('Status:', xhr.status);
-                    console.error('Status Text:', xhr.statusText);
-                }
-            });
-        }
-    });
-
-    // Validate on field blur (optional for immediate validation)
-    $('#title, #content').on('blur', function() {
-        validateInput(this);
-    });
-
-    // Remove 'is-invalid' class when the user starts typing
-    $('#title, #content').on('input', function() {
-        $(this).removeClass('is-invalid'); // Remove invalid class
-        $(this).closest('.form-group').find('.invalid-feedback').hide(); // Hide error message
-    });
-
-    // Function to validate input
-    function validateInput(input) {
-        if ($(input).val().trim() === "") {
-            $(input).addClass('is-invalid'); // Add invalid class
-            $(input).closest('.form-group').find('.invalid-feedback').show(); // Show feedback message
-        } else {
-            $(input).removeClass('is-invalid');
-            $(input).closest('.form-group').find('.invalid-feedback').hide();
         }
     }
 
+    if (isValid) {
+
+        // AJAX request to save the announcement
+        $.ajax({
+            url: "{{ route('save_announcement') }}", // Adjust this route according to your Laravel routes
+            type: 'POST',
+            data: {
+                title: title,
+                content: content,
+                announcement_type: announcementType,
+                _token: '{{ csrf_token() }}' // CSRF token for security
+            },
+            success: function(response) {
+
+                alert('Announcement saved successfully!');
+                location.href = "{{ route('anouncements') }}";
+            },
+            error: function(xhr) {
+                // Handle error response
+                alert('An error occurred while saving the announcement.');
+                console.error('Error response:', xhr.responseText);
+                console.error('Status:', xhr.status);
+                console.error('Status Text:', xhr.statusText);
+            }
+        });
+    }
+});
+
+// Validate on field blur (optional for immediate validation)
+$('#title, #editor1').on('blur', function() {
+    validateInput(this);
+});
+
+// Remove 'is-invalid' class when the user starts typing
+$('#title, #editor1').on('input', function() {
+    $(this).removeClass('is-invalid'); // Remove invalid class
+    $(this).closest('.form-group').find('.invalid-feedback').hide(); // Hide error message
+});
+
+// Function to validate input
+function validateInput(input) {
+    if ($(input).val().trim() === "") {
+        $(input).addClass('is-invalid'); // Add invalid class
+        $(input).closest('.form-group').find('.invalid-feedback').show(); // Show feedback message
+    } else {
+        $(input).removeClass('is-invalid');
+        $(input).closest('.form-group').find('.invalid-feedback').hide();
+    }
+}
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 5
+Version: 5.4.1
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin/
+*/
+
+var handleBootstrapWysihtml5 = function() {
+    "use strict";
+    $('#wysihtml5').wysihtml5();
+};
+
+var handleCkeditor = function() {
+    var elm = document.querySelector('#editor1');
+    ClassicEditor.create(elm, {
+        toolbar: {
+            items: [
+                'bold',
+                'italic',
+                'underline',
+                'strikethrough',
+                'code',
+                'undo',
+                'redo'
+                // The unwanted features (Link, BlockQuote, Insert Table, Image Upload) are omitted here
+            ]
+        }
+    }).catch(error => {
+        console.error(error);
+    });
+};
+
+var FormWysihtml = function() {
+    "use strict";
+    return {
+        // Main function
+        init: function() {
+            handleCkeditor();
+            handleBootstrapWysihtml5();
+        }
+    };
+}();
+
+$(document).ready(function() {
+    FormWysihtml.init();
+
+    $(document).on('theme-reload', function() {
+        $('.wysihtml5-sandbox, input[name="_wysihtml5_mode"], .wysihtml5-toolbar').remove();
+        $('#wysihtml5').show();
+        handleBootstrapWysihtml5();
+    });
+});
+
+// Clear the CKEditor content
+function clearEditorContent() {
+    if (window.editor) {
+        window.editor.setData(''); // Clears the editor content
+    }
+}
+
+// Populate the CKEditor with data for editing
+function populateEditorWithData(data) {
+    if (window.editor) {
+        window.editor.setData(data); // Sets the content to the editor
+    }
+}
 </script>
 @endpush

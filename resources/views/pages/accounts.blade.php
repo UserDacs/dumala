@@ -104,26 +104,30 @@
     <!-- BEGIN row -->
 
     <!-- BEGIN panel -->
-    <div class="panel panel-inverse">
+    <div class="panel panel-inverse" style="padding-left: 0px !important; padding-right: 0px !important;">
         <!-- BEGIN panel-heading -->
-        <div class="panel-heading" style="background: #fdfeff !important; ">
-            <h4 class="panel-title" style="width: auto !important;"> <a href="#modal-dialog-add" data-bs-toggle="modal"
-                    class="btn btn-primary btn-sm " style="display: inline !important;">Add Account</a></h4>
-            <div class="panel-heading-btn">
+        <div class="panel-heading" style="background: #fdfeff !important; padding-bottom: 0px !important;">
+            <h4 class="panel-title pt-2" style="width: auto !important;">
+                <a href="#modal-dialog-add" data-bs-toggle="modal" class="btn btn-primary btn-sm"
+                    style="display: inline !important;">
+                    Add Account
+                </a>
+            </h4>
 
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i
-                        class="fa fa-redo"></i></a>
-
-            </div>
         </div>
         <!-- END panel-heading -->
         <!-- BEGIN panel-body -->
-        <div class="panel-body">
+        <div class="panel-body" style="padding-bottom: 0px !important;">
             <!-- Search Input -->
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <input type="text" id="search-input" class="form-control" placeholder="Search by Name or Role"
-                        oninput="getList(this.value)">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="input-group">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search by Name or Role"
+                            oninput="getList(this.value)">
+                        <div class="input-group-text" style="background: #fdfeff !important;"><i
+                                class="fa fa-search"></i></div>
+                    </div>
                 </div>
             </div>
 
@@ -135,7 +139,7 @@
                         <th width="1%" data-orderable="false"></th>
                         <th class="text-nowrap">Name</th>
                         <th class="text-nowrap">Role</th>
-                        <th class="text-nowrap">Status</th>
+                        <th  width="1%" class="text-nowrap">Status</th>
                         <th class="text-nowrap" style="text-align: right; padding-right: 50px">Action</th>
                     </tr>
                 </thead>
