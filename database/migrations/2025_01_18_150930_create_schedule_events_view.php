@@ -18,8 +18,11 @@ return new class extends Migration
                 s.id AS schedule_id,
                 u.profile_image,
                 DATE_FORMAT(s.date, '%M %d, %Y') AS date,
+                DATE_FORMAT(s.date, '%Y') AS year,
+                DATE_FORMAT(s.date, '%M') AS month,
                 DATE_FORMAT(s.time_from, '%l:%i %p') AS time_from,
                 DATE_FORMAT(s.time_to, '%l:%i %p') AS time_to,
+                s.date AS s_date,
                 u.role,
                 s.venue,
                 s.address,
@@ -41,13 +44,21 @@ return new class extends Migration
                 e.end AS event_end,
                 e.color AS event_color,
                 e.created_at AS event_created_at,
-                e.updated_at AS event_updated_at
+                e.updated_at AS event_updated_at,
+                l.id AS liturgicals_id,
+                l.title AS liturgical_title,
+                l.requirements AS liturgical_requirement,
+                l.stipend AS liturgical_stipend
             FROM
                 schedules s
             LEFT JOIN
                 events e
             ON
                 s.id = e.schedule_id
+            LEFT JOIN
+                liturgicals l
+            ON
+                l.id = e.liturgical_id
             JOIN
                 users u
             ON

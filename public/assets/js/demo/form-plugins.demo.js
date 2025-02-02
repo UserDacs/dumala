@@ -51,16 +51,17 @@ var handleRenderDatepicker = function() {
 };
 
 var handleRenderDateRangePicker = function() {
+
 	$("#default-daterange").daterangepicker({
 		opens: "right",
 		format: "MM/DD/YYYY",
 		separator: " to ",
 		startDate: moment().subtract(29, "days"),
 		endDate: moment(),
-		minDate: "01/01/2012",
-		maxDate: "12/31/2018",
+		minDate: "01/01/2024",
+		maxDate: "12/31/2025",
 	}, function (start, end) {
-		$("#default-daterange input").val(start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"));
+		$("#default-daterange input").val(start.format("MMM D, YYYY") + " - " + end.format("MMM D, YYYY"));
 	});
 
 	$("#advance-daterange span").html(moment().subtract(29, "days").format("MMMM D, YYYY") + " - " + moment().format("MMMM D, YYYY"));

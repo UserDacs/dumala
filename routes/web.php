@@ -30,6 +30,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project_financial', [App\Http\Controllers\AnnouncementController::class, 'project_financial'])->name('project_financial');
     Route::get('/public_announce', [App\Http\Controllers\AnnouncementController::class, 'public_announce'])->name('public_announce');
     Route::get('/report-priest', [App\Http\Controllers\ReportController::class, 'report_priest'])->name('report-priest');
+
+
+    Route::get('/report-annual', [App\Http\Controllers\ReportController::class, 'report_annual'])->name('report-annual');
+    Route::get('/report-month', [App\Http\Controllers\ReportController::class, 'report_month'])->name('report-month');
+    Route::get('/report-week', [App\Http\Controllers\ReportController::class, 'report_week'])->name('report-week');
+
+
+    Route::get('/liturgical-annual', [App\Http\Controllers\LiturgicalController::class, 'liturgical_annual'])->name('liturgical-annual');
+    Route::get('/liturgical-month', [App\Http\Controllers\LiturgicalController::class, 'liturgical_month'])->name('liturgical-month');
+    Route::get('/liturgical-week', [App\Http\Controllers\LiturgicalController::class, 'liturgical_week'])->name('liturgical-week');
+
+
     Route::get('/report-total', [App\Http\Controllers\ReportController::class, 'report_total'])->name('report-total');
 
     Route::post('/donors/store', [App\Http\Controllers\ReportController::class, 'storeDonor'])->name('donors.store');
@@ -61,6 +73,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/change-password', [UserController::class, 'changePassword']);
 
     Route::get('/list-request', [App\Http\Controllers\RequestController::class, 'getListSched'])->name('list-request');
+
+    Route::get('/list-liturgical', [App\Http\Controllers\LiturgicalController::class, 'getListLiturgical'])->name('list-liturgical');
+    
+
+    Route::post('/liturgicals', [App\Http\Controllers\LiturgicalController::class, 'store'])->name('liturgicals.store');
+    Route::post('/liturgicals/{liturgical}', [App\Http\Controllers\LiturgicalController::class, 'update'])->name('liturgicals.update');
+    Route::delete('/liturgicals/{liturgical}', [App\Http\Controllers\LiturgicalController::class, 'destroy'])->name('liturgicals.destroy');
+    Route::get('/liturgicals/{liturgical}/edit', [App\Http\Controllers\LiturgicalController::class, 'edit'])->name('liturgicals.edit');
+
+    Route::get('/liturgical/create', [App\Http\Controllers\LiturgicalController::class, 'create'])->name('liturgicals.create');
+
+
 });
 
 Route::get('/notifications', function () {
@@ -83,3 +107,5 @@ Route::post('/notifications/read/{id}', function ($id) {
     auth()->user()->notifications()->find($id)->markAsRead();
     return response()->json(['message' => 'Notification marked as read.']);
 })->middleware('auth');
+
+

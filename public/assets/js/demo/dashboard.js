@@ -293,7 +293,7 @@ var Dashboard = function () {
 	return {
 		//main function
 		init: function () {
-			handleDashboardGritterNotification();
+			// handleDashboardGritterNotification();
 			handleDashboardSparkline();
 			handleInteractiveChart();
 			handleDonutChart();

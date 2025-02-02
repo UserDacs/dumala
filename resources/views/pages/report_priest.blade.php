@@ -27,148 +27,166 @@
         <!-- END panel-heading -->
         <!-- BEGIN panel-body -->
         <div class="panel-body">
-            <div>
-                <!-- Search Form -->
-                <div class="navbar-item navbar-form d-flex justify-content-end">
-                    <form action="#" method="POST" name="search" onsubmit="return false;">
-                        <div class="form-group d-flex">
-                            <input type="text" id="search-input" class="form-control" placeholder="Enter keyword"
-                                onkeyup="searchTable()" style="width: 345px">
-                            <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="row mb-3">
+                        <label class="form-label col-form-label col-md-3">Year:</label>
+                        <div class="col-md-9">
+                            <select class="form-select" id="yearSelect">
+                                <option disabled selected>Select Year</option>
+                            </select>
                         </div>
-                    </form>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <div class="btn-group w-100">
+                        <a class="btn btn-outline-success active">Annually</a>
+                        <a class="btn btn-outline-success">Monthly</a>
+                        <a class="btn btn-outline-success">Weekly</a>
+                    </div>
                 </div>
             </div>
-            <table class="table  table-hover">
-                <thead>
-                    <tr>
-                        <th>Profile</th>
-                        <th>Name</th>
-                        <th>Role</th>
+            <div class="row mt-3">
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Main Row 1 -->
-                    <tr data-bs-toggle="collapse" data-bs-target="#detailsRow1" aria-expanded="false"
-                        aria-controls="detailsRow1">
-                        <td>
-                            <img src="{{ asset('assets/img/user/user-1.jpg') }}" class="rounded h-50px my-n1 mx-n1"
-                                alt="User" />
-                        </td>
-                        <td style="padding-top: 20px;"> John Doe</td>
-                        <td style="padding-top: 20px;">Admin</td>
+                <table class="table  table-hover">
+                    <thead>
+                        <tr>
+                            <th>Profile</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Main Row 1 -->
+                        <tr data-bs-toggle="collapse" data-bs-target="#detailsRow1" aria-expanded="false"
+                            aria-controls="detailsRow1">
+                            <td>
+                                <img src="{{ asset('assets/img/user/user-1.jpg') }}" class="rounded h-50px my-n1 mx-n1"
+                                    alt="User" />
+                            </td>
+                            <td style="padding-top: 20px;"> John Doe</td>
+                            <td style="padding-top: 20px;">Admin</td>
 
-                    </tr>
-                    <!-- Collapsible Content for Row 1 -->
-                    <tr id="detailsRow1" class="collapse fade">
-                        <td colspan="5">
-                            <div class="p-1 bg-light">
-                                <div class="d-flex p-1">
+                        </tr>
+                        <!-- Collapsible Content for Row 1 -->
+                        <tr id="detailsRow1" class="collapse fade">
+                            <td colspan="5">
+                                <div class="p-1 bg-light">
+                                    <div class="d-flex p-1">
 
-                                    <div class="flex-1">
-                                        <table class="table mb-2" style="border: none !important;">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="border: none !important;"><strong>Requested
-                                                            Priest:</strong></td>
-                                                    <td style="border: none !important;">Anthony Everett</td>
-                                                    <td style="border: none !important;"><strong>Time:</strong></td>
-                                                    <td style="border: none !important;">1:00pm - 2:00pm</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="border: none !important;"><strong>Venue:</strong></td>
-                                                    <td style="border: none !important;">St. Joseph the Worker Cathedral
-                                                    </td>
-                                                    <td style="border: none !important;"><strong>Status:</strong></td>
-                                                    <td style="border: none !important;">Accepted by priest</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="border: none !important;"><strong>Address:</strong></td>
-                                                    <td style="border: none !important;">8 J S Torralba Street,
-                                                        Tagbilaran City Bohol </td>
-                                                    <td style="border: none !important;"></td>
-                                                    <td style="border: none !important;"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <p class="mb-0 d-flex justify-content-end">
-                                            <a href="javascript:;" class="btn btn-sm btn-success me-5px">Accept</a>
-                                            <a href="javascript:;" class="btn btn-sm btn-danger me-5px">Decline</a>
-                                            <a href="javascript:;" class="btn btn-sm btn-primary">Assign another
-                                                priest</a>
-                                        </p>
+                                        <div class="flex-1">
+                                            <table class="table mb-2" style="border: none !important;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: none !important;"><strong>Requested
+                                                                Priest:</strong></td>
+                                                        <td style="border: none !important;">Anthony Everett</td>
+                                                        <td style="border: none !important;"><strong>Time:</strong></td>
+                                                        <td style="border: none !important;">1:00pm - 2:00pm</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: none !important;"><strong>Venue:</strong>
+                                                        </td>
+                                                        <td style="border: none !important;">St. Joseph the Worker
+                                                            Cathedral
+                                                        </td>
+                                                        <td style="border: none !important;"><strong>Status:</strong>
+                                                        </td>
+                                                        <td style="border: none !important;">Accepted by priest</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: none !important;"><strong>Address:</strong>
+                                                        </td>
+                                                        <td style="border: none !important;">8 J S Torralba Street,
+                                                            Tagbilaran City Bohol </td>
+                                                        <td style="border: none !important;"></td>
+                                                        <td style="border: none !important;"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <p class="mb-0 d-flex justify-content-end">
+                                                <a href="javascript:;" class="btn btn-sm btn-success me-5px">Accept</a>
+                                                <a href="javascript:;" class="btn btn-sm btn-danger me-5px">Decline</a>
+                                                <a href="javascript:;" class="btn btn-sm btn-primary">Assign another
+                                                    priest</a>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
-                    <!-- Main Row 2 -->
-                    <tr data-bs-toggle="collapse" data-bs-target="#detailsRow2" aria-expanded="false"
-                        aria-controls="detailsRow2">
-                        <td>
-                            <img src="{{ asset('assets/img/user/user-2.jpg') }}" class="rounded h-50px my-n1 mx-n1"
-                                alt="User" />
-                        </td>
-                        <td style="padding-top: 20px;">Jane Smith</td>
-                        <td style="padding-top: 20px;">User</td>
+                        <!-- Main Row 2 -->
+                        <tr data-bs-toggle="collapse" data-bs-target="#detailsRow2" aria-expanded="false"
+                            aria-controls="detailsRow2">
+                            <td>
+                                <img src="{{ asset('assets/img/user/user-2.jpg') }}" class="rounded h-50px my-n1 mx-n1"
+                                    alt="User" />
+                            </td>
+                            <td style="padding-top: 20px;">Jane Smith</td>
+                            <td style="padding-top: 20px;">User</td>
 
-                    </tr>
-                    <!-- Collapsible Content for Row 2 -->
-                    <tr id="detailsRow2" class="collapse fade">
-                        <td colspan="5">
-                            <div class="p-1 bg-light">
-                                <div class="d-flex p-1">
-                                    <div class="flex-1">
-                                        <table class="table mb-2" style="border: none !important;">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="border: none !important;"><strong>Requested
-                                                            Priest:</strong></td>
-                                                    <td style="border: none !important;">Anthony Everett</td>
-                                                    <td style="border: none !important;"><strong>Time:</strong></td>
-                                                    <td style="border: none !important;">1:00pm - 2:00pm</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="border: none !important;"><strong>Venue:</strong></td>
-                                                    <td style="border: none !important;">St. Joseph the Worker Cathedral
-                                                    </td>
-                                                    <td style="border: none !important;"><strong>Status:</strong></td>
-                                                    <td style="border: none !important;">Accepted by priest</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="border: none !important;"><strong>Address:</strong></td>
-                                                    <td style="border: none !important;">8 J S Torralba Street,
-                                                        Tagbilaran City Bohol </td>
-                                                    <td style="border: none !important;"></td>
-                                                    <td style="border: none !important;"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <p class="mb-0 d-flex justify-content-end">
-                                            <a href="javascript:;" class="btn btn-sm btn-success me-5px">Accept</a>
-                                            <a href="javascript:;" class="btn btn-sm btn-danger me-5px">Decline</a>
-                                            <a href="javascript:;" class="btn btn-sm btn-primary">Assign another
-                                                priest</a>
-                                        </p>
+                        </tr>
+                        <!-- Collapsible Content for Row 2 -->
+                        <tr id="detailsRow2" class="collapse fade">
+                            <td colspan="5">
+                                <div class="p-1 bg-light">
+                                    <div class="d-flex p-1">
+                                        <div class="flex-1">
+                                            <table class="table mb-2" style="border: none !important;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: none !important;"><strong>Requested
+                                                                Priest:</strong></td>
+                                                        <td style="border: none !important;">Anthony Everett</td>
+                                                        <td style="border: none !important;"><strong>Time:</strong></td>
+                                                        <td style="border: none !important;">1:00pm - 2:00pm</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: none !important;"><strong>Venue:</strong>
+                                                        </td>
+                                                        <td style="border: none !important;">St. Joseph the Worker
+                                                            Cathedral
+                                                        </td>
+                                                        <td style="border: none !important;"><strong>Status:</strong>
+                                                        </td>
+                                                        <td style="border: none !important;">Accepted by priest</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: none !important;"><strong>Address:</strong>
+                                                        </td>
+                                                        <td style="border: none !important;">8 J S Torralba Street,
+                                                            Tagbilaran City Bohol </td>
+                                                        <td style="border: none !important;"></td>
+                                                        <td style="border: none !important;"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <p class="mb-0 d-flex justify-content-end">
+                                                <a href="javascript:;" class="btn btn-sm btn-success me-5px">Accept</a>
+                                                <a href="javascript:;" class="btn btn-sm btn-danger me-5px">Decline</a>
+                                                <a href="javascript:;" class="btn btn-sm btn-primary">Assign another
+                                                    priest</a>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div>
-                <div class="pagination pagination-sm d-flex justify-content-end">
-                    <div class="page-item disabled"><a href="javascript:;" class="page-link">«</a></div>
-                    <div class="page-item active"><a href="javascript:;" class="page-link">1</a></div>
-                    <div class="page-item"><a href="javascript:;" class="page-link">2</a></div>
-                    <div class="page-item"><a href="javascript:;" class="page-link">3</a></div>
-                    <div class="page-item"><a href="javascript:;" class="page-link">4</a></div>
-                    <div class="page-item"><a href="javascript:;" class="page-link">5</a></div>
-                    <div class="page-item"><a href="javascript:;" class="page-link">»</a></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <div class="pagination pagination-sm d-flex justify-content-end">
+                        <div class="page-item disabled"><a href="javascript:;" class="page-link">«</a></div>
+                        <div class="page-item active"><a href="javascript:;" class="page-link">1</a></div>
+                        <div class="page-item"><a href="javascript:;" class="page-link">2</a></div>
+                        <div class="page-item"><a href="javascript:;" class="page-link">3</a></div>
+                        <div class="page-item"><a href="javascript:;" class="page-link">4</a></div>
+                        <div class="page-item"><a href="javascript:;" class="page-link">5</a></div>
+                        <div class="page-item"><a href="javascript:;" class="page-link">»</a></div>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -182,6 +200,16 @@
 @push('scripts')
 
 <script>
+const startYear = 1990; // Simula ng taon
+const endYear = new Date().getFullYear(); // Kasalukuyang taon
+const select = document.getElementById("yearSelect");
+
+for (let year = endYear; year >= startYear; year--) { // Loop in descending order
+    let option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+    select.appendChild(option);
+}
 $('#reports').addClass('active');
 $('#report_priest').addClass('active');
 </script>

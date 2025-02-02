@@ -24,7 +24,35 @@
     .ck-editor__main {
         border: 1px solid #d2d3d3 !important;
     }
+
+    .widget-list-item {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        /* Removes underline */
+        color: inherit;
+        /* Inherits text color */
+        cursor: pointer;
+        /* Cursor changes to hand */
+        transition: background-color 0.3s ease;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .widget-list-item:hover {
+        background-color: #f0f0f0;
+        /* Background highlight on hover */
+    }
     </style>
+    <link href="{{ asset('assets/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet" />
+
+    <link href="{{ asset('assets/plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/ion-rangeslider/css/ion.rangeSlider.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/tag-it/css/jquery.tagit.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/spectrum-colorpicker2/dist/spectrum.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/select-picker/dist/picker.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/plugins/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css') }}"
+        rel="stylesheet" />
     <!-- ================== END page-css ================== -->
     @stack('style-file')
 
@@ -80,6 +108,22 @@
     <script src="{{ asset('assets/plugins/sweetalert/dist/sweetalert.min.js') }}"></script>
 
     <script src="{{ asset('assets/plugins/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
+
+    <script src="{{ asset('assets/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+
+
+    <script src="{{ asset('assets/plugins/select2/dist/js/select2.min.js') }}"></script>
+
+    <script src="{{ asset('assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery.maskedinput/src/jquery.maskedinput.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery-migrate/dist/jquery-migrate.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/tag-it/js/tag-it.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/clipboard/dist/clipboard.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/spectrum-colorpicker2/dist/spectrum.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/select-picker/dist/picker.min.js') }}"></script>
+
+    <script src="{{ asset('assets/plugins/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.min.js') }}">
+    </script>
 
 
     <script>
@@ -381,7 +425,33 @@
             </div>
         </div>
     </div>
+    <div class="offcanvas offcanvas-end bg-gray-300" id="offcanvasEndExample">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Notifications List</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
 
+            <div class="widget-list rounded mb-4 bg-gray-300  list_notifyasa" data-id="widget">
+                <!-- BEGIN widget-list-item -->
+                @foreach(get_all_notifications() as $noti)
+                <a href="{{ $noti['data']['url'] }}" class="widget-list-item media" data-id="{{ $noti['id'] }}">
+                    <div class="widget-list-media">
+                        <img src="{{$noti['data']['image_path']}}" width="50" alt="" class="rounded">
+                    </div>
+                    <div class="widget-list-content">
+                        <h4 class="widget-list-title">{{$noti['data']['title']}} 
+                        @if($noti['read_at'] == null) <span class="badge bg-danger rounded-pill">Unread</span> @endif
+                         
+                        </h4>
+                        <p class="widget-list-desc">{{$noti['data']['description']}}</p>
+                    </div>
+                </a>
+                @endforeach
+                
+            </div>
+        </div>
+    </div>
 
     <script>
     $('#change-password-btn').on('click', function() {
@@ -568,6 +638,7 @@
             }
         });
     });
+
     function formatRelativeTime(createdAt) {
         // Parse the createdAt string into a JavaScript Date object
         const createdDate = new Date(createdAt);
@@ -619,8 +690,8 @@
                                     <img src="${notification.data.image_path? notification.data.image_path: '/assets/img/user/user-profile-icon.jpg'}" class="media-object" alt="" />
                                 </div>
                                 <div class="media-body">
-                                    <h6 class="media-heading">${notification.data.name}</h6>
-                                    <p>${notification.data.title}</p>
+                                    <h6 class="media-heading">${notification.data.title}</h6>
+                                    <p>${notification.data.description}</p>
                                     <div class="text-muted fs-10px">${formatRelativeTime(notification.created_at)}</div>
                                 </div> 
                             </a>
@@ -634,7 +705,7 @@
             error: function() {
                 $('.list_notify').html(
                     '<div class="dropdown-item text-center text-danger">Error loading notifications</div>'
-                    );
+                );
             }
         });
     }
@@ -645,7 +716,7 @@
     }, 10000);
     fetchNotifications(); // Fetch on page load
 
-    function getCount() {  
+    function getCount() {
 
         $.ajax({
             url: `/notifications-count`, // Replace with your URL
@@ -655,11 +726,11 @@
                 if (response == 0) {
                     $('.noti').html('');
                     $('.noti_head').html('NOTIFICATIONS (0)');
-                }else{
+                } else {
                     $('.noti').html('<span class="badge">' + response + '</span>');
                     $('.noti_head').html('NOTIFICATIONS (' + response + ')');
                 }
-                
+
 
             },
             error: function(xhr, status, error) {
@@ -669,6 +740,24 @@
     }
 
     $(document).on('click', '.list_notify a', function(e) {
+        e.preventDefault();
+        const id = $(this).data('id');
+        const url = $(this).attr('href');
+
+        $.ajax({
+            url: `/notifications/read/${id}`,
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function() {
+                window.location.href = url; // Redirect after marking as read
+            }
+        });
+    });
+
+
+    $(document).on('click', '.list_notifyasa a', function(e) {
         e.preventDefault();
         const id = $(this).data('id');
         const url = $(this).attr('href');

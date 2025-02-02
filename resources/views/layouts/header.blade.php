@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="dropdown-footer text-center">
-                    <a href="javascript:;" class="text-decoration-none">View more</a>
+                    <a class="text-decoration-none" data-bs-toggle="offcanvas" href="#offcanvasEndExample">View more</a>
                 </div>
             </div>
         </div>

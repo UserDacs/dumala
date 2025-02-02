@@ -12,6 +12,7 @@
                     <div class="menu-text">Home</div>
                 </a>
             </div>
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
             <div class="menu-item" id="accounts">
                 <a href="{{ route('accounts') }}" class="menu-link">
                     <div class="menu-icon">
@@ -20,6 +21,7 @@
                     <div class="menu-text">Accounts</div>
                 </a>
             </div>
+            @endif
             <div class="menu-item" id="requests">
                 <a href="{{ route('request') }}" class="menu-link">
                     <div class="menu-icon">
@@ -28,6 +30,7 @@
                     <div class="menu-text">Requests</div>
                 </a>
             </div>
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
             <div class="menu-item" id="schedules">
                 <a href="{{ route('schedules') }}" class="menu-link">
                     <div class="menu-icon">
@@ -36,6 +39,8 @@
                     <div class="menu-text">Schedules</div>
                 </a>
             </div>
+            @endif
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
             <div class="menu-item" id="announcements">
                 <a href="{{ route('anouncements') }}" class="menu-link">
                     <div class="menu-icon">
@@ -44,6 +49,8 @@
                     <div class="menu-text">Announcements</div>
                 </a>
             </div> 
+            @endif
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin')
             <div class="menu-item" id="liturgical">
                 <a href="/liturgical" class="menu-link">
                     <div class="menu-icon">
@@ -52,6 +59,8 @@
                     <div class="menu-text">Liturgical Services</div>
                 </a>
             </div>
+            @endif
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
             <div class="menu-item has-sub " id="reports">
                 <a href="javascript:;" class="menu-link">
                     <div class="menu-icon">
@@ -62,19 +71,19 @@
                 </a>
                 <div class="menu-submenu">
                     <div class="menu-item" id="report_priest">
-                        <a href="{{ route('report-priest') }}" class="menu-link">
+                        <a href="{{ route('report-annual') }}" class="menu-link">
                             <div class="menu-text">Priest Completed Services </i></div>
                         </a>
                     </div>
                     <div class="menu-item" id="report_total">
-                        <a href="{{ route('report-total') }}" class="menu-link">
+                        <a href="{{ route('liturgical-annual') }}" class="menu-link">
                             <div class="menu-text">Total Liturgical Services Requested </i></div>
                         </a>
                     </div>
                    
                 </div>
             </div>
-
+            @endif
             <!-- END minify-button -->
         </div>
         <!-- END menu -->

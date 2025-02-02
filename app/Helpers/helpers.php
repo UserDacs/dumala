@@ -1,5 +1,6 @@
 <?php
 use App\Models\User;
+use App\Models\Liturgical;
 use App\Notifications\NotifyUser;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +27,42 @@ if (!function_exists('get_all_priest')) {
     function get_all_priest()
     {
         return User::where('role','priest')->get();
+    }
+}
+
+
+
+if (!function_exists('get_all_notifications')) {
+    /**
+     * Get all notifications (both read and unread) for the authenticated user.
+     *
+     * @return array
+     */
+    function get_all_notifications()
+    {
+        // Check if the user is authenticated
+        if (auth()->check()) {
+            // Get all notifications (both unread and read)
+            $notifications = auth()->user()->notifications; // Fetches both read and unread
+
+            // Return notifications as an array
+            return $notifications->toArray();
+        }
+
+        return []; // Return an empty array if the user is not authenticated
+    }
+}
+
+if (!function_exists('get_all_liturgical')) {
+    /**
+     * Format a date into 'Y-m-d' format.
+     *
+     * @param string|null $date
+     * @return string|null
+     */
+    function get_all_liturgical()
+    {
+        return Liturgical::orderBy('id', 'desc')->get();
     }
 }
 
@@ -105,7 +142,7 @@ if (!function_exists('send_notification')) {
         if ($param['type'] == 'all') {
             $users = User::all(); 
         } else {
-            $users = User::whereIn('role', $param['where'])->get(); 
+            $users = User::whereIn('id', $param['where'])->get(); 
         }
 
         foreach ($users as $user) {
@@ -122,6 +159,7 @@ if (!function_exists('send_notification')) {
                 'user' => $latestNotification->data['user'] ?? '',
                 'title' => $latestNotification->data['title'] ?? '',
                 'url' => $latestNotification->data['url'] ?? '',
+                'description' => $latestNotification->data['description'] ?? '',
                 'datetime' => $latestNotification->created_at->diffForHumans(),
                 'where' => $latestNotification->data['where'] ?? '',
             ];
@@ -131,5 +169,6 @@ if (!function_exists('send_notification')) {
 
         return response()->json(['message' => 'No users to notify.']);
     }
+
 }
 

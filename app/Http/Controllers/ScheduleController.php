@@ -66,12 +66,13 @@ class ScheduleController extends Controller
             $validated['assign_by'] =  Auth::user()->id;
             $validated['status'] = '1';
             $validated['is_assign'] = '0';
-
+            
 
             // Insert the schedule
             $schedule = Schedule::create($validated);
 
             $event = new Event;
+            $event->liturgical_id = $request->input('liturgical_id');
             $event->schedule_id = $schedule->id;
             $event->title =  $request->input('purpose');
             $event->start = $date_now .' '.$time_from_24;
@@ -79,15 +80,25 @@ class ScheduleController extends Controller
             $event->color = '#348fe2';
             $event->save();
 
+            $users_role = User::whereIn('role', ['admin', 'parish_priest'])->get(); 
+
+            $user_role_ids = $users_role->pluck('id')->toArray();
+
+            $assign_to = $request->input('assign_to');
+            if ($assign_to) {
+                $user_role_ids[] = $assign_to;
+            }
+
             $data = [
                 'type' => 'private',
                 'image_path' => Auth::user()->profile_image,
                 'name' =>  empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname,
                 'user' => Auth::user()->id,
+                'user_to' => '0',
                 'title' => $request->input('purpose'),
-                'description' => $request->input('purpose'),
+                'description' => empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname. ' added an unassigned '. $request->input('purpose'),
                 'url' => '/request',
-                'where' => ['admin', 'parish_priest'],
+                'where' => $user_role_ids,
             ];
 
 
@@ -99,7 +110,7 @@ class ScheduleController extends Controller
             $date_now = $request->input('date');
 
             $user_name = User::where('id',$request->input('assign_to'))->first();
-
+            $user_name_f = ($user_name->prefix=='')? '' : $user_name->prefix.'.'.' '.$user_name->firstname.' '.$user_name->lastname;
 
             $validated['purpose'] = 'Mass Schedule';
 
@@ -117,13 +128,14 @@ class ScheduleController extends Controller
             $validated['assign_by'] =  Auth::user()->id;
             $validated['status'] = '1';
             $validated['is_assign'] = '1';
-            $validated['assign_to_name'] = ($user_name->prefix=='')? '' : $user_name->prefix.'.'.' '.$user_name->firstname.' '.$user_name->lastname;
+            $validated['assign_to_name'] = $user_name_f;
 
 
             // Insert the schedule
             $schedule = Schedule::create($validated);
 
             $event = new Event;
+            $event->liturgical_id = $request->input('liturgical_id');
             $event->schedule_id = $schedule->id;
             $event->title =  'Mass Schedule';
             $event->start = $date_now .' '.$time_from_24;
@@ -131,21 +143,31 @@ class ScheduleController extends Controller
             $event->color = '#348fe2';
             $event->save();
 
+            $users_role = User::whereIn('role', ['admin', 'parish_priest'])->get(); 
+            
+            $user_role_ids = $users_role->pluck('id')->toArray();
+
+            $assign_to = $request->input('assign_to');
+            if ($assign_to) {
+                $user_role_ids[] = $assign_to;
+            }
+
             $data = [
                 'type' => 'private',
                 'image_path' => Auth::user()->profile_image,
                 'name' =>  empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname,
                 'user' => Auth::user()->id,
-                'title' => $request->input('purpose'),
-                'description' => $request->input('purpose'),
+                'user_to' => $request->input('assign_to'),
+                'title' => 'Mass Schedule',
+                'description' => empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname .' assigned '. $user_name_f .' to the mass schedule.',
                 'url' => '/request',
-                'where' => ['admin', 'parish_priest'],
+                'where' => $user_role_ids,
             ];
 
 
         }
        
-       $log = send_notification($data);
+       send_notification($data);
 
 
         return response()->json(['message' => 'Schedule created successfully!'], 200);
@@ -155,8 +177,13 @@ class ScheduleController extends Controller
     public function assign_priest(Request $request)
     {
         try {
+            $prefix = Auth::user()->prefix ?? '';
+            $full = empty($prefix) 
+            ? '' 
+            : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname;
 
             $user = User::where('id', $request->input('user_id'))->first();
+            $user_name_f = ($user->prefix=='')? '' : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname;
     
             if (!$user) {
                 return response()->json(['message' => 'User not found.'], 404);
@@ -175,15 +202,25 @@ class ScheduleController extends Controller
     
             $sched->save();
 
+
+            $users_role = User::whereIn('role', ['admin', 'parish_priest'])->get(); 
+            
+            $user_role_ids = $users_role->pluck('id')->toArray();
+          
+            if ($user->id) {
+                $user_role_ids[] = $user->id;
+            }
+
             $data = [
                 'type' => 'private',
                 'image_path' => $user->profile_image,
                 'name' =>  ($user->prefix=='') ? '' : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname,
                 'user' => $user->id,
-                'title' => 'Assign priest',
-                'description' => 'Assign priest',
+                'user_to' => $user->id,
+                'title' => $user->purpose,
+                'description' => $full.' assigned '. $user_name_f .' to the '. $user->purpose.'.',
                 'url' => '/request',
-                'where' => ['admin', 'parish_priest'],
+                'where' => $user_role_ids,
             ];
 
             send_notification($data);

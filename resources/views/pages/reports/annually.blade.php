@@ -16,180 +16,119 @@
     <!-- BEGIN breadcrumb -->
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-        <li class="breadcrumb-item active">Requests</li>
+        <li class="breadcrumb-item active">Priest Completed Services</li>
     </ol>
     <!-- END breadcrumb -->
     <!-- BEGIN page-header -->
-    <h1 class="page-header">Requests <small></small></h1>
+    <h1 class="page-header">Priest Completed Services <small></small></h1>
 
     <div class="panel panel-inverse">
 
         <!-- END panel-heading -->
         <!-- BEGIN panel-body -->
         <div class="panel-body">
-            <!--  -->
-            <div class="input-group">
-                <input type="text" id="search-input" class="form-control" placeholder="Search by Name or Role"
-                    oninput="getList(this.value, 1)">
-                <div class="input-group-text" style="background: #fdfeff !important;"><i class="fa fa-search"></i></div>
-            </div>
-
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Purpose</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Populated by JavaScript -->
-                </tbody>
-            </table>
-
-            <div>
-                <div class="pagination pagination-sm d-flex justify-content-end">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-<div class="modal fade" id="modal-dialog-decline">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Decline Request</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label" for="exampleInputEmail1">Refer Another Priest:</label>
-                    <select class="form-select" id="priest-select">
-                        <option value="" selected>Choose a priest</option>
+            <div class="row">
+                <div class="col-md-2">
+                    <select id="get-priest" class="form-select" onchange="getPriestId(this)">
                         @foreach(get_all_priest() as $priest)
-                        <option value="{{ $priest->id }}">{{ $priest->name }}</option>
+                        <option value="{{ $priest->id }}">{{ $priest->prefix  }}. {{ $priest->firstname }} {{ $priest->lastname }}</option>
                         @endforeach
 
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="editor-text">Add a reason:</label>
-                    <textarea id="editor-text" name="editor-text"></textarea>
+                <div class="col-md-12 mt-3">
+                    <div class="btn-group w-100">
+                        <a href="/report-annual" class="btn btn-outline-success active">Annually</a>
+                        <a href="/report-month" class="btn btn-outline-success">Monthly</a>
+                        <a href="/report-week" class="btn btn-outline-success">Weekly</a>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
-                <a href="javascript:;" class="btn btn-success">Action</a>
-            </div>
-        </div>
-    </div>
-</div>
 
-
-<div class="modal fade" id="modal-dialog-assign-to-priest">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Assign a priest</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-            </div>
-            <div class="modal-body">
-                <div class="widget-list rounded mb-4" data-id="widget">
-                    <!-- BEGIN widget-list-item -->
-
-                    @foreach(get_all_priest() as $priest)
-                    <div class="widget-list-item">
-                        <div class="widget-list-media">
-                            <img src="{{ $priest->profile_image ?? '/assets/img/user/user-profile-icon.jpg'}}"
-                                width="50" alt="" class="rounded">
-                        </div>
-                        <div class="widget-list-content">
-                            <h4 class="widget-list-title">{{ $priest->prefix ? $priest->prefix.'.' : '' }}
-                                {{ $priest->firstname }} {{ $priest->lastname }}</h4>
-                        </div>
-                        <div class="widget-list-action">
-                            <a href="javascript:;" data-id="" onclick="onclickAssignPost({{ $priest->id }})" class="btn btn-success btn-icon btn-circle btn-lg assign_post">
-                                <i class="fa fa-add"> </i>
-                            </a>
+                <div class="col-md-2 mt-2">
+                    <div class="row mb-3">
+                        <label class="form-label col-form-label col-md-3">Year:</label>
+                        <div class="col-md-9">
+                            <select class="form-select" id="yearSelect" onchange="getYear(this)">
+                                <option disabled selected>Select Year</option>
+                            </select>
                         </div>
                     </div>
-                    @endforeach
-
-                    <!-- END widget-list-item -->
                 </div>
+            </div>
+            <div class="row mt-3">
 
+               
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Requester Name</th>
+                            <th>Request</th>
+                            <th>Requested Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+
+                <div>
+                    <div class="pagination pagination-sm d-flex justify-content-end">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
 
             </div>
         </div>
+
     </div>
+
 </div>
 <!-- END row -->
-
-
-
 
 @endsection
 
 @push('scripts')
 
 <script>
-$('#requests').addClass('active');
+const startYear = 1990; // Simula ng taon
+const endYear = new Date().getFullYear(); // Kasalukuyang taon
+const select = document.getElementById("yearSelect");
+
+for (let year = endYear; year >= startYear; year--) { // Loop in descending order
+    let option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+
+    // Check if the current year matches the year in the loop, and mark it as selected
+    if (year === endYear) {
+        option.selected = true;
+    }
+
+    select.appendChild(option);
+}
+$('#reports').addClass('active');
+$('#report_priest').addClass('active');
+
+
 let currentPage = 1;
-getList();
+getList($('#get-priest').val(),$('#yearSelect').val());
 
 
-/*
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 5
-Version: 5.4.1
-Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin/
-*/
+function getPriestId(selectElement) {
+    const selectedId = selectElement.value; // Get the selected priest's ID
+    getList(selectedId);
+    // You can do whatever you need with the ID here, like making an API call
+}
 
-var handleCkeditor = function() {
-    var elm = document.querySelector('#editor-text');
-    ClassicEditor.create(elm, {
-        toolbar: {
-            items: [
-                'bold',
-                'italic',
-                'undo',
-                'redo'
-                // The unwanted features (Link, BlockQuote, Insert Table, Image Upload) are omitted here
-            ]
-        }
-    }).then(editor => {
-        // Add the editor instance to a global variable to access it later
-        window.editor = editor;
-    }).catch(error => {
-        console.error(error);
-    });
-};
 
-var FormWysihtml = function() {
-    "use strict";
-    return {
-        // Main function
-        init: function() {
-            handleCkeditor();
-            // handleBootstrapWysihtml5();
-        }
-    };
-}();
+function getYear(selectElement) {
+    const selectedId = selectElement.value; // Get the selected priest's ID
+    getList($('#get-priest').val(),selectedId);
+    // You can do whatever you need with the ID here, like making an API call
+}
 
-$(document).ready(function() {
-    FormWysihtml.init();
-
-    $(document).on('theme-reload', function() {
-        $('.wysihtml5-sandbox, input[name="_wysihtml5_mode"], .wysihtml5-toolbar').remove();
-        $('#wysihtml5').show();
-        // handleBootstrapWysihtml5();/
-    });
-});
 // Clear the CKEditor content
 function clearEditorContent() {
     if (window.editor) {
@@ -204,7 +143,7 @@ function populateEditorWithData(data) {
     }
 }
 
-function getList(search = '', page = 1) {
+function getList(search = '', year='', page = 1) {
     currentPage = page; // Update current page
     $.ajax({
         url: '/list-request',
@@ -212,6 +151,7 @@ function getList(search = '', page = 1) {
         dataType: 'json',
         data: {
             search: search,
+            year: year,
             page: page
         },
         success: function(response) {
@@ -276,18 +216,7 @@ function getList(search = '', page = 1) {
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        ${!item.assign_to_name ? `
-                                             <p class="mb-0 d-flex justify-content-end">
-                                                <a href="javascript:;" class="btn btn-sm btn-primary"   onclick="onclickAssignToPriest(${item.schedule_id})">Assign a priest</a>
-                                            </p>
-                                        ` : `
-                                            <p class="mb-0 d-flex justify-content-end">
-                                                <a href="javascript:;" class="btn btn-sm btn-success me-5px">Accept</a>
-                                                <a href="javascript:;" class="btn btn-sm btn-danger me-5px btn_decline"
-                                                    onclick="onclickDecline(${item.schedule_id})">Decline</a>
-                                                <a href="javascript:;" class="btn btn-sm btn-primary">Assign another priest</a>
-                                            </p>
-                                        `}
+                                        
                                         
                                     </div>
                                 </div>
@@ -306,7 +235,7 @@ function getList(search = '', page = 1) {
             tbody.empty();
             tbody.append(`
                 <tr>
-                    <td colspan="4" class="text-center">An error occurred while fetching data.</td>
+                    <td colspan="3" class="text-center">An error occurred while fetching data.</td>
                 </tr>
             `);
         }

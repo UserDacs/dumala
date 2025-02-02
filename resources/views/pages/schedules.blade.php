@@ -137,42 +137,21 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Purpose:</label>
+                                @foreach(get_all_liturgical() as $priest)
+
+                                @if($priest->id != 1)
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="baptism" data-val="Baptism">
-                                    <label class="form-check-label" for="baptism">
-                                        Baptism
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                        data-val="{{$priest->title}}" data-id="{{$priest->id}}">
+                                    <label class="form-check-label" for="{{$priest->title}}">
+                                        {{$priest->title}}
                                     </label>
                                 </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="wedding" data-val="Wedding">
-                                    <label class="form-check-label" for="wedding">
-                                        Wedding
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="funeral" data-val="Funeral">
-                                    <label class="form-check-label" for="funeral">
-                                        Funeral
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="confirm" data-val="Confirmation">
-                                    <label class="form-check-label" for="confirm">
-                                        Confirmation
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="personal" data-val="Personal">
-                                    <label class="form-check-label" for="personal" data-val="Personal">
-                                        Personal
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="others1"  data-val="Others">
-                                    <label class="form-check-label" for="others1">
-                                        Others
-                                    </label>
-                                </div>
+                                @endif
+
+
+                                @endforeach
+
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">If others, please specify:</label>
@@ -269,6 +248,7 @@ $(document).on('click', '#save-schedule', function() {
         venue: $('.venue').val(),
         address: $('.address').val(),
         purpose: $('input[name="flexRadioDefault"]:checked').attr('data-val'),
+        liturgical_id: $('input[name="flexRadioDefault"]:checked').attr('data-id'),
         others: $('.others').val(),
         sched_type: 'own_sched',
         assign_to: '',
@@ -296,8 +276,6 @@ $('#save-event-btn').on('click', function() {
     var priestId = $('#priest-select').val();
 
     // Validate data
-    
-
 
     // Send data using AJAX
     $.ajax({
@@ -305,6 +283,7 @@ $('#save-event-btn').on('click', function() {
         method: 'POST',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'),
+            liturgical_id: '1',
             date: selectedDate,
             time_from: fromTime,
             time_to: toTime,
@@ -312,18 +291,14 @@ $('#save-event-btn').on('click', function() {
             sched_type: 'mass_sched',
         },
         success: function(response) {
-            if (response.success) {
-                alert('Event saved successfully.');
-                // Optionally, you can close the modal or reset the form here
-                $('#datepicker').val('');
-                $('#timepicker-mass-from').val('');
-                $('#timepicker-mass-to').val('');
-                $('#priest-select').val('');
-                // Close modal
-                $('[data-bs-dismiss="modal"]').click();
-            } else {
-                alert('Error saving event: ' + response.message);
-            }
+            alert('Event saved successfully.');
+            // Optionally, you can close the modal or reset the form here
+            $('#datepicker').val('');
+            $('#timepicker-mass-from').val('');
+            $('#timepicker-mass-to').val('');
+            $('#priest-select').val('');
+            // Close modal
+            $('[data-bs-dismiss="modal"]').click();
         },
         error: function(xhr, status, error) {
             alert('An error occurred: ' + error);

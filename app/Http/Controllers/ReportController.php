@@ -13,13 +13,25 @@ class ReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function report_priest()
-    {
-        return view('pages.report_priest');
-    }
+
     public function report_total()
     {
         return view('pages.report_total');
+    }
+
+    public function report_annual()
+    {
+        return view('pages.reports.annually');
+    }
+
+    public function report_month()
+    {
+        return view('pages.reports.monthly');
+    }
+
+    public function report_week()
+    {
+        return view('pages.reports.weekly');
     }
 
     /**

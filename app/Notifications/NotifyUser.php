@@ -29,9 +29,12 @@ class NotifyUser extends Notification
             'image_path' => $this->data['image_path'] ?? '',
             'name' => $this->data['name'] ?? '',
             'user' => $this->data['user'] ?? '',
+            'user_to' => $this->data['user_to'] ?? '',
             'title' => $this->data['title'] ?? '',
             'url' => $this->data['url'] ?? '',
+            'description' => $this->data['description'] ?? '',
             'where' => $this->data['where'] ?? '',
+            
         ];
     }
 }

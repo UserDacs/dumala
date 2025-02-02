@@ -182,7 +182,9 @@ var handleCkeditor = function() {
                 'strikethrough',
                 'code',
                 'undo',
-                'redo'
+                'redo',
+                'bulletedList',   // Add this for bulleted list
+                'numberedList'    // Add this for numbered list
                 // The unwanted features (Link, BlockQuote, Insert Table, Image Upload) are omitted here
             ]
         }
