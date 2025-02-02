@@ -33,7 +33,7 @@ class RequestController extends Controller
         $query = DB::table('schedule_events_view');
         $id_ = Auth::user()->id;
 
-        if (Auth::user()->role != 'admin' || Auth::user()->role != 'parish_priest') {
+        if (Auth::user()->role != 'admin' && Auth::user()->role != 'parish_priest') {
 
             $query->where(function ($q) use ($id_) {
                 $q->where('created_by', $id_)

@@ -209,6 +209,7 @@ class ScheduleController extends Controller
           
             if ($user->id) {
                 $user_role_ids[] = $user->id;
+                $user_role_ids[] = $sched->created_by;
             }
 
             $data = [

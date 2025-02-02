@@ -23,7 +23,8 @@
     <h1 class="page-header">Requests <small></small></h1>
 
     <div class="panel panel-inverse">
-
+        <a href="#modal-create-own-sched" data-bs-toggle="modal" class="btn btn-primary btn-sm me-1 mb-1">Create
+            schedule</a>
         <!-- END panel-heading -->
         <!-- BEGIN panel-body -->
         <div class="panel-body">
@@ -113,7 +114,8 @@
                                 {{ $priest->firstname }} {{ $priest->lastname }}</h4>
                         </div>
                         <div class="widget-list-action">
-                            <a href="javascript:;" data-id="" onclick="onclickAssignPost({{ $priest->id }})" class="btn btn-success btn-icon btn-circle btn-lg assign_post">
+                            <a href="javascript:;" data-id="" onclick="onclickAssignPost({{ $priest->id }})"
+                                class="btn btn-success btn-icon btn-circle btn-lg assign_post">
                                 <i class="fa fa-add"> </i>
                             </a>
                         </div>
@@ -129,7 +131,90 @@
     </div>
 </div>
 <!-- END row -->
+<div class="modal fade" id="modal-create-own-sched">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create schedule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
 
+                <div class="row">
+                    <div class="col-5">
+                        <h6 class="mb-3 mt-3">Enter Date</h6>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label" for="exampleInputEmail1">Date</label>
+                            <div class="input-group date" id="datepicker-disabled-past" data-date-format="yyyy-m-d"
+                                data-date-start-date="Date.default">
+                                <input type="text" class="form-control form-control-sm" placeholder="Select Date" />
+                                <span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                        <h6 class="mb-3">Enter Time</h6>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label">From</label>
+                            <div class="input-group bootstrap-timepicker">
+                                <input id="timepicker-from" type="text" class="form-control form-control-sm" />
+                                <span class="input-group-text input-group-addon"><i class="fa fa-clock"></i></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">To</label>
+                            <div class="input-group bootstrap-timepicker">
+                                <input id="timepicker-to" type="text" class="form-control form-control-sm" />
+                                <span class="input-group-text input-group-addon"><i class="fa fa-clock"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-7">
+                        <div class="mb-3">
+                            <label class="form-label">Venue:</label>
+                            <input class="form-control form-control-sm venue" id="venue" type="text"
+                                placeholder="venue..." />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address:</label>
+                            <input class="form-control form-control-sm address" id="address" type="text"
+                                placeholder="address..." />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Purpose:</label>
+                            @foreach(get_all_liturgical() as $priest)
+
+                            @if($priest->id != 1)
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                    data-val="{{$priest->title}}" data-id="{{$priest->id}}">
+                                <label class="form-check-label" for="{{$priest->title}}">
+                                    {{$priest->title}}
+                                </label>
+                            </div>
+                            @endif
+
+
+                            @endforeach
+
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">If others, please specify:</label>
+                            <input class="form-control form-control-sm others" type="text"
+                                placeholder="if others, please specify..." />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white btn-xs" data-bs-dismiss="modal">Close</a>
+                <a href="javascript:;" class="btn btn-primary btn-xs" id="save-schedule">Action</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -141,7 +226,34 @@
 $('#requests').addClass('active');
 let currentPage = 1;
 getList();
+$(document).on('click', '#save-schedule', function() {
+    const data = {
+        date: $('#datepicker-disabled-past input').val(),
+        time_from: $('#timepicker-from').val(),
+        time_to: $('#timepicker-to').val(),
+        venue: $('.venue').val(),
+        address: $('.address').val(),
+        purpose: $('input[name="flexRadioDefault"]:checked').attr('data-val'),
+        liturgical_id: $('input[name="flexRadioDefault"]:checked').attr('data-id'),
+        others: $('.others').val(),
+        sched_type: 'own_sched',
+        assign_to: '',
+        _token: $('meta[name="csrf-token"]').attr('content'),
+    };
 
+    $.ajax({
+        url: '{{ route("schedules.store") }}',
+        method: 'POST',
+        data: data,
+        success: function(response) {
+            alert(response.message);
+            location.reload(); // Reload the page or update the DOM dynamically
+        },
+        error: function(xhr) {
+            alert('An error occurred: ' + xhr.responseText);
+        },
+    });
+});
 
 /*
 Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 5
@@ -329,14 +441,14 @@ function onclickDecline(id) {
 function onclickAssignToPriest(id) {
 
     $('#modal-dialog-assign-to-priest').modal('show');
-    $('.assign_post').attr('data-id',id);
-    
+    $('.assign_post').attr('data-id', id);
+
 
 }
 
 function onclickAssignPost(id) {
     console.log(id);
-    
+
 
     $.ajax({
         url: `/assign_priest`,
@@ -344,7 +456,7 @@ function onclickAssignPost(id) {
         dataType: 'json',
         data: {
             user_id: id,
-            sched_id:  $('.assign_post').attr('data-id')
+            sched_id: $('.assign_post').attr('data-id')
         },
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -359,7 +471,7 @@ function onclickAssignPost(id) {
                     icon: 'success'
                 });
                 getList();
-            }else{
+            } else {
                 message({
                     title: 'Error!',
                     message: response.message,
@@ -372,7 +484,7 @@ function onclickAssignPost(id) {
             console.error('Error updating user:', error);
         }
     });
-    
+
 
 }
 
@@ -403,6 +515,22 @@ function updatePagination(total, currentPage, perPage) {
             <a href="javascript:;" class="page-link" onclick="getList($('#search-input').val(), ${currentPage + 1})">»</a>
         </div>
     `);
+    
 }
+
+
+$("#datepicker-disabled-past").datepicker({
+    todayHighlight: true
+});
+
+$("#datepicker-mass").datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true
+});
+
+$("#timepicker-from").timepicker();
+$("#timepicker-to").timepicker();
+$("#timepicker-mass-from").timepicker();
+$("#timepicker-mass-to").timepicker();
 </script>
 @endpush
