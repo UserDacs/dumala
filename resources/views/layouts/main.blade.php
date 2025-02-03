@@ -263,24 +263,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
                 </div>
                 <div class="modal-body">
-                    <ul id="notification-list"></ul>
 
-                    <form id="notification-form">
-                        <meta name="csrf-token" content="{{ csrf_token() }}">
-                        <div>
-                            <label for="notification-title">Title</label>
-                            <input type="text" id="notification-title" name="title">
-                        </div>
-                        <div>
-                            <label for="notification-body">Body</label>
-                            <textarea id="notification-body" name="body"></textarea>
-                        </div>
-                        <div>
-                            <label for="user-id">User ID</label>
-                            <input type="number" id="user-id" name="user_id">
-                        </div>
-                        <button type="button" id="send-notification-btn">Send Notification</button>
-                    </form>
+                  
                     <div class="mb-3">
                         <label class="form-label" for="old_password">Old password</label>
                         <div class="input-group mb-3">
