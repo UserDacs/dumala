@@ -95,6 +95,60 @@ class UserController extends Controller
         //
     }
 
+    public function registerAccount(Request $request)
+    {
+        $request->validate([
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:50',
+            'email' => 'required|string|email|unique:users,email',
+            'password' => 'required|string',
+        ]);
+
+        $user_email_check = User::where('email', $request->input('email'))->first();
+
+        if ($user_email_check) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email already exist!',
+                'user' => $user_email_check,
+            ]);
+        }
+
+        $imagePath = null;
+
+        if ($request->hasFile('profile_image')) {
+            $imagePath = '/storage/'. $request->file('profile_image')->store('profile_images', 'public');
+        }
+
+        $pass = '';
+        $register_type = '';
+        if (!empty($request->input('password')))  {
+            $pass = $request->input('password');
+            $register_type = 'register_account';
+        }else{
+            $pass = $this->generateRandomString();
+            $register_type = 'create_account';
+        }
+
+        $user = User::create([
+            'name' => $request->input('firstname'),
+            'firstname' => $request->input('firstname'),
+            'lastname' => $request->input('lastname'),
+            'role' => 'parishioners',
+            'contact' => '63',
+            'email' => $request->input('email'),
+            'password' => Hash::make($pass),
+            'register_type' => $register_type,
+            'pass_coin' => $pass
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully!',
+            'user' => $user,
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

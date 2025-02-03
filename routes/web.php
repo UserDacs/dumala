@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
 
-   
+    
     Route::get('/user-list', [App\Http\Controllers\AccountsController::class, 'users_list'])->name('user-list');
 
 
@@ -86,6 +86,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 });
+
+Route::post('/user/register', [UserController::class, 'registerAccount'])->name('user.reister');
 
 Route::get('/notifications', function () {
     return auth()->user()->unreadNotifications;

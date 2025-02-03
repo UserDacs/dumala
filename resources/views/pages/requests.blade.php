@@ -23,13 +23,18 @@
     <h1 class="page-header">Requests <small></small></h1>
 
     <div class="panel panel-inverse">
-        <a href="#modal-create-own-sched" data-bs-toggle="modal" class="btn btn-primary btn-sm me-1 mb-1">Create
-            schedule</a>
+
+
+       
         <!-- END panel-heading -->
         <!-- BEGIN panel-body -->
         <div class="panel-body">
             <!--  -->
-            <div class="input-group">
+            @if(Auth::user()->role === 'parishioners' || Auth::user()->role === 'non_parishioners')
+            <a href="#modal-create-own-sched" data-bs-toggle="modal" class="btn btn-primary btn-sm me-1 mb-1">Create
+            schedule</a>
+            @endif
+            <div class="input-group mt-2">
                 <input type="text" id="search-input" class="form-control" placeholder="Search by Name or Role"
                     oninput="getList(this.value, 1)">
                 <div class="input-group-text" style="background: #fdfeff !important;"><i class="fa fa-search"></i></div>

@@ -56,6 +56,9 @@
                 <div class="mb-20px">
                     <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">Login</button>
                 </div>
+                <div class="mb-40px pb-40px">
+                    Not a member yet? Click <a href="/register" class="text-primary">here</a> to register.
+                </div>
             </form>
             <div id="loginMessage" style="display:none;" class="alert"></div>
         </div>

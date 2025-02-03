@@ -12,7 +12,7 @@
                     <div class="menu-text">Home</div>
                 </a>
             </div>
-            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' )
             <div class="menu-item" id="accounts">
                 <a href="{{ route('accounts') }}" class="menu-link">
                     <div class="menu-icon">
@@ -30,7 +30,7 @@
                     <div class="menu-text">Requests</div>
                 </a>
             </div>
-            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'priest')
             <div class="menu-item" id="schedules">
                 <a href="{{ route('schedules') }}" class="menu-link">
                     <div class="menu-icon">
@@ -40,7 +40,7 @@
                 </a>
             </div>
             @endif
-            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest')
             <div class="menu-item" id="announcements">
                 <a href="{{ route('anouncements') }}" class="menu-link">
                     <div class="menu-icon">
@@ -60,7 +60,7 @@
                 </a>
             </div>
             @endif
-            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role === 'parish_priest')
+            @if(Auth::user()->role === 'secretary' || Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest')
             <div class="menu-item has-sub " id="reports">
                 <a href="javascript:;" class="menu-link">
                     <div class="menu-icon">
