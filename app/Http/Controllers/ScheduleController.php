@@ -58,10 +58,7 @@ class ScheduleController extends Controller
           
             $validated['sched_type'] = $request->input('sched_type');
             $validated['created_by'] = Auth::user()->id;
-            $prefix = Auth::user()->prefix ?? ''; // Null coalescing operator
-            $validated['created_by_name'] = empty($prefix) 
-                ? '' 
-                : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname;
+            $validated['created_by_name'] = Auth::user()->prefix .' '. Auth::user()->firstname . " " . Auth::user()->lastname;
             $validated['assign_to'] =  $request->input('assign_to');
             $validated['assign_by'] =  Auth::user()->id;
             $validated['status'] = '1';
@@ -92,11 +89,11 @@ class ScheduleController extends Controller
             $data = [
                 'type' => 'private',
                 'image_path' => Auth::user()->profile_image,
-                'name' =>  empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname,
+                'name' => Auth::user()->prefix .' '. Auth::user()->firstname . " " . Auth::user()->lastname,
                 'user' => Auth::user()->id,
                 'user_to' => '0',
                 'title' => $request->input('purpose'),
-                'description' => empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname. ' added an unassigned '. $request->input('purpose'),
+                'description' => Auth::user()->prefix. " " . Auth::user()->firstname . " " . Auth::user()->lastname. ' added an unassigned '. $request->input('purpose'),
                 'url' => '/request',
                 'where' => $user_role_ids,
             ];
@@ -121,9 +118,7 @@ class ScheduleController extends Controller
             $validated['sched_type'] = $request->input('sched_type');
             $validated['created_by'] = Auth::user()->id;
             $prefix = Auth::user()->prefix ?? ''; // Null coalescing operator
-            $validated['created_by_name'] = empty($prefix) 
-                ? '' 
-                : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname;
+            $validated['created_by_name'] = Auth::user()->prefix .' '. Auth::user()->firstname . " " . Auth::user()->lastname;
             $validated['assign_to'] =  $request->input('assign_to');
             $validated['assign_by'] =  Auth::user()->id;
             $validated['status'] = '1';
@@ -155,11 +150,11 @@ class ScheduleController extends Controller
             $data = [
                 'type' => 'private',
                 'image_path' => Auth::user()->profile_image,
-                'name' =>  empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname,
+                'name' => Auth::user()->prefix .' '. Auth::user()->firstname . " " . Auth::user()->lastname,
                 'user' => Auth::user()->id,
                 'user_to' => $request->input('assign_to'),
                 'title' => 'Mass Schedule',
-                'description' => empty($prefix) ? '' : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname .' assigned '. $user_name_f .' to the mass schedule.',
+                'description' => Auth::user()->prefix .' '. Auth::user()->firstname . " " . Auth::user()->lastname .' assigned '. $user_name_f .' to the mass schedule.',
                 'url' => '/request',
                 'where' => $user_role_ids,
             ];
@@ -183,7 +178,7 @@ class ScheduleController extends Controller
             : "{$prefix}. " . Auth::user()->firstname . " " . Auth::user()->lastname;
 
             $user = User::where('id', $request->input('user_id'))->first();
-            $user_name_f = ($user->prefix=='')? '' : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname;
+            $user_name_f = $user->prefix.' '.$user->firstname.' '.$user->lastname;
     
             if (!$user) {
                 return response()->json(['message' => 'User not found.'], 404);
@@ -197,11 +192,10 @@ class ScheduleController extends Controller
     
             $sched->assign_to = $user->id;
             
-            $sched->assign_to_name = ($user->prefix=='') ? '' : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname;
+            $sched->assign_to_name = ($user->prefix=='') ? $user->firstname.' '.$user->lastname : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname;
             $sched->is_assign = '1';
     
             $sched->save();
-
 
             $users_role = User::whereIn('role', ['admin', 'parish_priest'])->get(); 
             
@@ -215,7 +209,7 @@ class ScheduleController extends Controller
             $data = [
                 'type' => 'private',
                 'image_path' => $user->profile_image,
-                'name' =>  ($user->prefix=='') ? '' : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname,
+                'name' => $user_name_f,
                 'user' => $user->id,
                 'user_to' => $user->id,
                 'title' => $user->purpose,
