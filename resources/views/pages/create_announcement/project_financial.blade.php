@@ -85,7 +85,7 @@
                 <p class="mb-0 d-flex justify-content-end">
                     <a href="javascript:;" id="save-donor-btn" type="submit"
                         class="btn btn-sm btn-success me-5px">Save</a>
-                    <a href="javascript:;" class="btn btn-sm btn-danger me-5px">Cancel</a>
+                    <a href="/anouncements" class="btn btn-sm btn-danger me-5px">Cancel</a>
                 </p>
             </div>
         </div>

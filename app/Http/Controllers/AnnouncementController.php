@@ -39,6 +39,27 @@ class AnnouncementController extends Controller
         }
     }
 
+    public function fetchAnnouncementsDash(Request $request)
+    {
+        try {
+            $type = $request->input('type', 'all'); // Get the type from the request
+    
+            // Fetch announcements from the database based on the type
+            if ($type === 'all') {
+                $announcements = Announcement::where('status', $request->announcement_status)->orderBy('created_at', 'desc')->get();
+            } else {
+                $announcements = Announcement::where('status', $request->announcement_status)->where('announcement_type', $type) // Assuming 'type' is the column for announcement type
+                    ->orderBy('created_at', 'desc')->get();
+            }
+    
+            return response()->json($announcements);
+        } catch (\Exception $e) {
+            // Log the error and return a JSON error response
+            Log::error('Error fetching announcements: ' . $e->getMessage());
+            return response()->json(['error' => 'Could not fetch announcements.'], 500);
+        }
+    }
+
     public function marriage_bann()
     {
         return view('pages.create_announcement.marriage_bann');

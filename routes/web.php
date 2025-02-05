@@ -47,6 +47,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/donors/store', [App\Http\Controllers\ReportController::class, 'storeDonor'])->name('donors.store');
     Route::post('/marriage/store', [App\Http\Controllers\ReportController::class, 'storeMarriage'])->name('marriage.store');
     Route::get('/announcements/fetch', [App\Http\Controllers\AnnouncementController::class, 'fetchAnnouncements'])->name('announcements.fetch');
+
+    Route::get('/announcements/fetch/dash', [App\Http\Controllers\AnnouncementController::class, 'fetchAnnouncementsDash'])->name('announcements.fetch.dash');
+
     Route::post('/save-announcement', [App\Http\Controllers\ReportController::class, 'storePublic'])->name('save_announcement');
 
     Route::post('/announcements/store', [App\Http\Controllers\AnnouncementController::class, 'storePost'])->name('announcements.store');

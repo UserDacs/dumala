@@ -5,7 +5,7 @@
 <div class="login login-v2 fw-bold">
     <!-- BEGIN login-cover -->
     <div class="login-cover">
-        <div class="login-cover-img" style="background-image: url({{ asset('assets/img/login-bg/login-bg-17.jpg') }})"
+        <div class="login-cover-img" style="background-image: url({{ asset('assets/img/wallpaper.jpg') }})"
             data-id="login-cover-image"></div>
         <div class="login-cover-bg"></div>
     </div>
@@ -54,7 +54,7 @@
                     <label class="form-check-label fs-13px text-gray-500" for="rememberMe">Remember Me</label>
                 </div> -->
                 <div class="mb-20px">
-                    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">Login</button>
+                    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg" style="background-color:#244625 !important">Login</button>
                 </div>
                 <div class="mb-40px pb-40px">
                     Not a member yet? Click <a href="/register" class="text-primary">here</a> to register.

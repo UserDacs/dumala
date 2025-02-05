@@ -45,7 +45,7 @@
                 </div>
                 <div class="pagination pagination-sm d-flex justify-content-end mt-3">
                     <button type="submit" class="btn btn-sm btn-success me-5px">Save Announcement</button>
-                    <a href="javascript:;" class="btn btn-sm btn-danger me-5px">Cancel</a>
+                    <a href="/anouncements" class="btn btn-sm btn-danger me-5px">Cancel</a>
                 </div>
             </form>
         </div>

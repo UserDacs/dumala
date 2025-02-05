@@ -43,6 +43,15 @@
         background-color: #f0f0f0;
         /* Background highlight on hover */
     }
+
+    .app-header[data-bs-theme=dark] {
+    background: #244625 !important;
+    }
+
+
+    .theme-green {
+        --bs-app-theme: #244625 !important;
+    }
     </style>
     <link href="{{ asset('assets/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet" />
 
@@ -161,7 +170,7 @@
     <!-- ================== END page-js ================== -->
 </head>
 
-<body class="pace-done theme-green">
+<body class="pace-done theme-green" style="background-color: #C4DDA9 !important;">
 
     <!-- BEGIN #loader -->
     <div id="loader" class="app-loader">

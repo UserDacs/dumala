@@ -5,7 +5,7 @@
 <div class="login login-v2 fw-bold">
     <!-- BEGIN login-cover -->
     <div class="login-cover">
-        <div class="login-cover-img" style="background-image: url({{ asset('assets/img/login-bg/login-bg-17.jpg') }})"
+        <div class="login-cover-img" style="background-image: url({{ asset('assets/img/wallpaper.jpg') }})"
             data-id="login-cover-image"></div>
         <div class="login-cover-bg"></div>
     </div>
@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="mb-20px">
-                    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">Register</button>
+                    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg" style="background-color:#244625 !important">Register</button>
                 </div>
                 <div class="mb-4 pb-5">
                     Already a member? Click <a href="/login">here</a> to login.
