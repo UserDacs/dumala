@@ -47,6 +47,21 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/donors/store', [App\Http\Controllers\ReportController::class, 'storeDonor'])->name('donors.store');
     Route::post('/marriage/store', [App\Http\Controllers\ReportController::class, 'storeMarriage'])->name('marriage.store');
+
+    Route::get('/marriage/{id}/edit', [App\Http\Controllers\ReportController::class, 'editMarriage'])->name('marriage.edit');
+    Route::post('/marriage/{id}/update', [App\Http\Controllers\ReportController::class, 'updateMarriage'])->name('marriage.update');
+
+
+    Route::get('/public_announce/{id}/edit', [App\Http\Controllers\ReportController::class, 'editPublic'])->name('public_announce.edit');
+    Route::post('/public_announce/{id}/update', [App\Http\Controllers\ReportController::class, 'updatePublic'])->name('public_announce.update');
+
+
+
+    Route::get('/project_financial/{id}/edit', [App\Http\Controllers\ReportController::class, 'editDonor'])->name('announcements.edit');
+    Route::post('/project_financial/{id}', [App\Http\Controllers\ReportController::class, 'updateDonor'])->name('announcements.update');
+
+
+
     Route::get('/announcements/fetch', [App\Http\Controllers\AnnouncementController::class, 'fetchAnnouncements'])->name('announcements.fetch');
 
     Route::get('/announcements/fetch/dash', [App\Http\Controllers\AnnouncementController::class, 'fetchAnnouncementsDash'])->name('announcements.fetch.dash');
@@ -70,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/get-events', [App\Http\Controllers\EventController::class, 'getEvents'])->name('calendar.getEvents');
 
-    Route::post('/schedules-store', [App\Http\Controllers\ScheduleController::class, 'store'])->name('schedules.store');
+    Route::post('/schedules-store', [App\Http\Controllers\ScheduleController::class, 'storeOrUpdate'])->name('schedules.store');
 
     Route::post('/assign_priest', [App\Http\Controllers\ScheduleController::class, 'assign_priest'])->name('assign_priest');
 
@@ -79,7 +94,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/list-request', [App\Http\Controllers\RequestController::class, 'getListSched'])->name('list-request');
 
     Route::get('/list-liturgical', [App\Http\Controllers\LiturgicalController::class, 'getListLiturgical'])->name('list-liturgical');
-    
+
+    Route::post('/completeSched', [App\Http\Controllers\ScheduleController::class, 'completeSched'])->name('completeSched');
+    Route::post('/archiveSched', [App\Http\Controllers\ScheduleController::class, 'archiveSched'])->name('archiveSched');
 
     Route::post('/liturgicals', [App\Http\Controllers\LiturgicalController::class, 'store'])->name('liturgicals.store');
     Route::post('/liturgicals/{liturgical}', [App\Http\Controllers\LiturgicalController::class, 'update'])->name('liturgicals.update');
