@@ -136,7 +136,7 @@
                                     placeholder="address..." />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Purpose:</label>
+                                <label class="form-label purpose-label">Purpose:</label>
                                 @foreach(get_all_liturgical() as $priest)
 
                                 @if($priest->id != 1)
@@ -155,8 +155,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">If others, please specify:</label>
-                                <input class="form-control form-control-sm others" type="text"
-                                    placeholder="if others, please specify..." />
+                                <input class="form-control form-control-sm others" type="text" placeholder="If others, please specify..." disabled />
                             </div>
                         </div>
                     </div>
@@ -239,10 +238,34 @@
 
 <script>
 $('#schedules').addClass('active');
+$(document).ready(function () {
+        $("input[type='radio'][name='flexRadioDefault']").on("change", function () {
+            let selectedValue = $(this).data("val"); // Get the selected radio value
 
-$(document).on('click', '#save-schedule', function() {
+            if (selectedValue.toLowerCase() === "others") {
+                $(".others").prop("disabled", false).focus(); // Enable input field
+            } else {
+                $(".others").prop("disabled", true).val(""); // Disable and clear input field
+            }
+        });
+    });
+    $(document).on('click', '#save-schedule', function() {
+    let isValid = true; // Track overall form validity
+    $('.error-message').remove(); // Remove previous error messages
+    $('.form-control, .form-check-input').removeClass('is-invalid');
+    $('.form-label.purpose-label').removeClass('text-danger'); // Reset Purpose label
+
+    const dateInput = $('#datepicker-disabled-past input');
+    const dateValue = dateInput.val().trim();
+
+    if (dateValue === '') {
+        isValid = false;
+        dateInput.addClass('is-invalid'); // Highlight the date field
+        // dateInput.after('<div class="text-danger error-message small">Date is required.</div>'); // Show error message
+    }
+
     const data = {
-        date: $('#datepicker-disabled-past input').val(),
+        date: dateValue,
         time_from: $('#timepicker-from').val(),
         time_to: $('#timepicker-to').val(),
         venue: $('.venue').val(),
@@ -255,6 +278,10 @@ $(document).on('click', '#save-schedule', function() {
         _token: $('meta[name="csrf-token"]').attr('content'),
     };
 
+    if (!isValid) {
+        return; // Stop submission if any validation fails
+    }
+
     $.ajax({
         url: '{{ route("schedules.store") }}',
         method: 'POST',
@@ -264,10 +291,27 @@ $(document).on('click', '#save-schedule', function() {
             location.reload(); // Reload the page or update the DOM dynamically
         },
         error: function(xhr) {
-            alert('An error occurred: ' + xhr.responseText);
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                $.each(errors, function(field, messages) {
+                    let inputField = $('.' + field.replace('_', '-')); // Match class
+
+                    if (field === 'purpose') {
+                        $('.purpose-label').addClass('text-danger'); // Add red text to label
+                    } else {
+                        inputField.addClass('is-invalid'); // Highlight error field
+                        inputField.after('<div class="text-danger error-message small">' + messages[0] + '</div>'); // Show error
+                    }
+                });
+            } else {
+                alert('An error occurred: ' + xhr.responseText);
+            }
         },
     });
 });
+
+
+
 
 $('#save-event-btn').on('click', function() {
     var selectedDate = $('#datepicker-mass-input').val();

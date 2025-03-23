@@ -84,10 +84,35 @@ $(document).ready(function() {
         $('.form-control').removeClass('is-invalid');
         $('.invalid-feedback').html('');
 
+        // Get input values
+        let email = $('#email').val().trim();
+        let password = $('#password').val().trim();
+        let isValid = true;
+
+        // Email validation
+        if (!email) {
+            $('#email').addClass('is-invalid');
+            $('#emailError').html('Email is required.');
+            isValid = false;
+        } else if (!validateEmail(email)) {
+            $('#email').addClass('is-invalid');
+            $('#emailError').html('Invalid email format.');
+            isValid = false;
+        }
+
+        // Password validation
+        if (!password) {
+            $('#password').addClass('is-invalid');
+            $('#passwordError').html('Password is required.');
+            isValid = false;
+        }
+
+        if (!isValid) return; // Stop if validation fails
+
         // Collect form data
         let formData = {
-            email: $('#email').val(),
-            password: $('#password').val(),
+            email: email,
+            password: password,
             remember: $('#rememberMe').is(':checked') ? 1 : 0,
             _token: $('input[name="_token"]').val()
         };
@@ -98,9 +123,7 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
-
                 if (response.field == 1) {
-                    // Handle success
                     $('#loginMessage')
                         .addClass('alert-success')
                         .html(response.message)
@@ -109,19 +132,6 @@ $(document).ready(function() {
                     setTimeout(function() {
                         window.location.href = response.redirect || '/';
                     }, 1000);
-                } else if (response.field == 2) {
-                    $('#password').val('');
-                    $('#loginMessage')
-                        .addClass('alert-danger')
-                        .html(response.message)
-                        .show();
-
-                } else if (response.field == 4) {
-                    $('#email').val('');
-                    $('#loginMessage')
-                        .addClass('alert-danger')
-                        .html(response.message)
-                        .show();
                 } else {
                     $('#loginMessage')
                         .addClass('alert-danger')
@@ -144,6 +154,11 @@ $(document).ready(function() {
             icon.removeClass('fa-eye').addClass('fa-eye-slash');
         }
     });
+
+    function validateEmail(email) {
+        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return re.test(email);
+    }
 });
 </script>
 @endsection

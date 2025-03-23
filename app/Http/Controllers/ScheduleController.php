@@ -194,6 +194,7 @@ class ScheduleController extends Controller
             
             $sched->assign_to_name = ($user->prefix=='') ? $user->firstname.' '.$user->lastname : $user->prefix.'.'.' '.$user->firstname.' '.$user->lastname;
             $sched->is_assign = '1';
+            $sched->status = '2';
     
             $sched->save();
 

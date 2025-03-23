@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\RequestController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -114,3 +115,4 @@ Route::post('/notifications/read/{id}', function ($id) {
 })->middleware('auth');
 
 
+Route::post('/request/{id}/decline', [RequestController::class, 'declineRequest'])->name('request.decline');
