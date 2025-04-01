@@ -25,7 +25,7 @@ if (!function_exists('get_all_priest')) {
      */
     function get_all_priest()
     {
-        return \App\Models\User::whereIn('role', ['priest', 'parish_priest'])->get();
+        return \App\Models\User::whereIn('role', ['priest', 'parish_priest'])->where('user_status','active')->get();
     }
 }
 

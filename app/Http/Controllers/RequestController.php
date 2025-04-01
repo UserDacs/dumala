@@ -77,7 +77,8 @@ class RequestController extends Controller
         }
     
         $total = $query->count();
-        $sched = $query->skip(($page - 1) * $perPage)
+        $sched = $query->orderBy('schedule_events_view.s_date', 'desc')
+                    ->skip(($page - 1) * $perPage)
                     ->take($perPage)
                     ->get();
     
@@ -88,6 +89,81 @@ class RequestController extends Controller
             'per_page' => $perPage
         ]);
     }
+
+
+
+    public function getListComplete(Request $request)
+    {
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $date_range = $request->input('date_range');
+        $perPage = 10; // Items per page
+
+        $query = DB::table('schedule_events_view')
+            ->leftJoin('declined_requests', 'schedule_events_view.schedule_id', '=', 'declined_requests.schedule_id')
+            ->select(
+                'schedule_events_view.*',
+                'declined_requests.reason as declined_reason',
+                'declined_requests.referred_priest_id as declined_priest_id', // Fix here
+                'declined_requests.created_at as declined_at'
+            );
+
+        $id_ = Auth::user()->id;
+
+        if (Auth::user()->role != 'admin' && Auth::user()->role != 'parish_priest') {
+            $query->where(function ($q) use ($id_) {
+                $q->where('schedule_events_view.created_by', $id_)
+                    ->orWhere('schedule_events_view.assign_to', $id_);
+            });  
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('schedule_events_view.created_by_name', 'like', '%' . $search . '%')
+                    ->orWhere('schedule_events_view.role', 'like', '%' . $search . '%')
+                    ->orWhere(function ($query) use ($search) {
+                        $query->whereNotNull('schedule_events_view.assign_to')
+                            ->where('schedule_events_view.assign_to', $search);
+                    });
+            });
+        }
+
+        if ($year) {
+            $query->where('schedule_events_view.year', $year);
+        }
+
+        if ($month) {
+            $query->where('schedule_events_view.month', $month);
+        }
+
+        if ($date_range) {
+            list($start_date, $end_date) = explode(' - ', $date_range);
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $end_date = date('Y-m-d', strtotime($end_date));
+
+            $query->whereBetween('schedule_events_view.s_date', [$start_date, $end_date]);
+        }
+
+        // Filter by status == 2
+        $query->where('schedule_events_view.status', 4);
+
+        $total = $query->count();
+        $sched = $query->orderBy('schedule_events_view.s_date', 'desc')
+                    ->skip(($page - 1) * $perPage)
+                    ->take($perPage)
+                    ->get();
+
+        return response()->json([
+            'data' => $sched,
+            'total' => $total,
+            'current_page' => $page,
+            'per_page' => $perPage
+        ]);
+    }
+
+
 
     public function declineRequest(Request $request, $id)
     {

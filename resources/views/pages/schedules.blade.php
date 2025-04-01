@@ -22,16 +22,16 @@
     <!-- END breadcrumb -->
     <!-- BEGIN page-header -->
     <h1 class="page-header">Schedules <small>
-    @if( Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' )
-    <a href="#modal-create-own-sched" data-bs-toggle="modal"
-                class="btn btn-primary btn-sm me-1 mb-1">Create own
+            @if( Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role ===
+            'priest' )
+            <a href="#modal-create-own-sched" data-bs-toggle="modal" class="btn btn-primary btn-sm me-1 mb-1">Create own
                 schedule</a> <a href="#modal-create-mass-sched" class="btn btn-success btn-sm me-1 mb-1"
                 data-bs-toggle="modal">Create mass
                 schedule</a>
-    @endif
-    
-   
-            </small></h1>
+            @endif
+
+
+        </small></h1>
     <!-- END page-header -->
     <hr />
     <!-- BEGIN row -->
@@ -209,13 +209,13 @@
 <div class="modal fade" id="modal-create-mass-sched">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <!-- <div class="modal-header">
                 <h5 class="modal-title">Mass schedule</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-            </div>
+            </div> -->
             <div class="modal-body">
                 <input type="hidden" id="update_mass_sched">
-                <div class="mb-3">
+                <div class="mb-3 d-none" >
                     <label class="form-label" for="exampleInputEmail1">Date</label>
                     <div class="input-group date" id="datepicker-mass" data-date-format="yyyy-m-d"
                         data-date-start-date="Date.default">
@@ -225,7 +225,7 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3 d-none">
                     <div class="row">
                         <div class="col-6">
                             <label class="form-label">From</label>
@@ -282,68 +282,71 @@ $(document).ready(function() {
         }
     });
 });
-$(document).ready(function() {
-    $('#update-btn').on('click', function() {
-        // Fetch event details from #event-details-modal
-        let status = $('#event-status').text();
-        let date = $('#event-date').text();
-        let time = $('#event-time').text().split(' - '); // Assuming format: "08:00 AM - 10:00 AM"
-        let purpose = $('#event-purpose').text().trim();
-        let venue = $('#event-venue').text();
-        let address = $('#event-address').text();
-        let others = $('.others').val();
-        let priestId = $('#event-priest-id').val(); // Assuming there's an element with priest ID
+
+function UpdateBTN() {
+    console.log("5");
+
+    // Fetch event details from #event-details-modal
+    let status = $('#event-status').text();
+    let date = $('#event-date').text();
+    let time = $('#event-time').text().split(' - '); // Assuming format: "08:00 AM - 10:00 AM"
+    let purpose = $('#event-purpose').text().trim();
+    let venue = $('#event-venue').text();
+    let address = $('#event-address').text();
+    let others = $('.others').val();
+    let priestId = $('#event-priest-id').val(); // Assuming there's an element with priest ID
 
 
-        // Convert the date using JavaScript
-        let parsedDate = new Date(date);
+    // Convert the date using JavaScript
+    let parsedDate = new Date(date);
 
-        // Format it to YYYY-MM-DD
-        let formattedDate = parsedDate.getFullYear() + "-" +
-            String(parsedDate.getMonth() + 1).padStart(2, '0') + "-" +
-            String(parsedDate.getDate()).padStart(2, '0');
+    // Format it to YYYY-MM-DD
+    let formattedDate = parsedDate.getFullYear() + "-" +
+        String(parsedDate.getMonth() + 1).padStart(2, '0') + "-" +
+        String(parsedDate.getDate()).padStart(2, '0');
 
 
-        if (purpose === "Mass Schedule") {
-            // Populate Mass Schedule Modal
+    if (purpose === "Mass Schedule") {
+        // Populate Mass Schedule Modal
 
-            $('#update_mass_sched').val($('#sched_ids').val());
-            $('#datepicker-mass-input').val(formattedDate);
-            $('#timepicker-mass-from').val(time[0]); // Start time
-            $('#timepicker-mass-to').val(time[1]); // End time
-            $('#priest-select').val(priestId); // Select priest
-            // assign_to_id
-            // Hide event details modal & show Mass Schedule modal
-            $('#event-details-modal').modal('hide');
-            setTimeout(() => {
-                $('#modal-create-mass-sched').modal('show');
-            }, 500);
-        } else {
-            // Populate Own Schedule Modal
-            $('#update_sched').val($('#sched_ids').val());
+        $('#update_mass_sched').val($('#sched_ids').val());
+        $('#datepicker-mass-input').val(formattedDate);
+        $('#timepicker-mass-from').val(time[0]); // Start time
+        $('#timepicker-mass-to').val(time[1]); // End time
+        $('#priest-select').val(priestId); // Select priest
+        // assign_to_id
+        // Hide event details modal & show Mass Schedule modal
+        $('#event-details-modal').modal('hide');
+        setTimeout(() => {
+            $('#modal-create-mass-sched').modal('show');
+        }, 500);
+    } else {
+        // Populate Own Schedule Modal
+        $('#update_sched').val($('#sched_ids').val());
 
-            $('#datepicker-disabled-past input').val(formattedDate);
-            $('#timepicker-from').val(time[0]); // Start time
-            $('#timepicker-to').val(time[1]); // End time
-            $('#venue').val(venue);
-            $('#address').val(address);
-            $('.others').val(others || "").prop('disabled', !others);
+        $('#datepicker-disabled-past input').val(formattedDate);
+        $('#timepicker-from').val(time[0]); // Start time
+        $('#timepicker-to').val(time[1]); // End time
+        $('#venue').val(venue);
+        $('#address').val(address);
+        $('.others').val(others || "").prop('disabled', !others);
 
-            // Select the correct Purpose radio button
-            $('input[name="flexRadioDefault"]').each(function() {
-                if ($(this).data('val') === purpose) {
-                    $(this).prop('checked', true);
-                }
-            });
+        // Select the correct Purpose radio button
+        $('input[name="flexRadioDefault"]').each(function() {
+            if ($(this).data('val') === purpose) {
+                $(this).prop('checked', true);
+            }
+        });
 
-            // Hide event details modal & show Own Schedule modal
-            $('#event-details-modal').modal('hide');
-            setTimeout(() => {
-                $('#modal-create-own-sched').modal('show');
-            }, 500);
-        }
-    });
-});
+        // Hide event details modal & show Own Schedule modal
+        $('#event-details-modal').modal('hide');
+        setTimeout(() => {
+            $('#modal-create-own-sched').modal('show');
+        }, 500);
+    }
+}
+
+
 
 
 var handleCalendarDemo = function() {
@@ -362,15 +365,71 @@ var handleCalendarDemo = function() {
         editable: false, // Set to false to disable editing
         droppable: false, // Disable event dropping
         themeSystem: 'bootstrap',
+        selectable: true,
         events: getEvets(),
+        // dateClick: function(info) {
+        //     console.log("Clicked date:", info.dateStr);
+        //     alert("You clicked on: " + info.dateStr);
+        // },
+        select: function(info) {
+            let startDate = new Date(info.start);
+            let endDate = new Date(info.end);
+
+            // Format: YYYY-MM-DD
+            let formattedDate = startDate.getFullYear() + "-" +
+                String(startDate.getMonth() + 1).padStart(2, '0') + "-" +
+                String(startDate.getDate()).padStart(2, '0');
+
+            // Format: HH:MM AM/PM
+            let formattedStartTime = startDate.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            let formattedEndTime = endDate.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            let formattedRange = formattedDate + " " + formattedStartTime + " to " + formattedEndTime;
+
+            console.log("Selected datetime:", formattedRange);
+            // alert("You selected: " + formattedRange);
+
+            // Set values in modal input fields
+            $('#datepicker-mass-input').val(formattedDate); // YYYY-MM-DD
+            $('#timepicker-mass-from').val(formattedStartTime); // HH:MM AM/PM
+            $('#timepicker-mass-to').val(formattedEndTime); // HH:MM AM/PM
+
+            // Show modal
+            $('#modal-create-mass-sched').modal('show');
+        },
         eventClick: function(info) {
             console.log("info ::", info.event._def.extendedProps);
             if (info.event._def.extendedProps.status != 5) {
 
             }
+            const status = info.event._def.extendedProps.status;
+            let statusBadge = '';
+
+            if (status === 1) {
+                statusBadge = '<span class="badge bg-yellow text-black">Pending</span>';
+            } else if (status === 2) {
+                statusBadge = '<span class="badge bg-primary">Accepted</span>';
+            } else if (status === 3) {
+                statusBadge = '<span class="badge bg-danger">Declined</span>';
+            } else if (status === 4) {
+                statusBadge = '<span class="badge bg-info text-black">Complete</span>';
+            } else if (status === 5) {
+                statusBadge = '<span class="badge bg-secondary">Archived</span>';
+            } else {
+                statusBadge = '<span class="badge bg-success">Accepted by priest</span>';
+            }
 
             $('#sched_ids').val(info.event._def.extendedProps.schedule_id);
-            $('#event-status').text(info.event._def.extendedProps.status);
+            $('#event-status').html(statusBadge);
             $('#event-date').text(info.event._def.extendedProps.formated_date);
             $('#event-time').text(info.event._def.extendedProps.start_time + " - " + info.event._def
                 .extendedProps.end_time);
@@ -384,12 +443,14 @@ var handleCalendarDemo = function() {
 
             if (info.event._def.extendedProps.status === 4) {
                 $('.modal-footer-detail').html(
-                    '<button type="button" class="btn btn-success px-4" id="archive-btn" onclick="archiveSched('+info.event._def.extendedProps.schedule_id+')">Archive</button>'
-                    );
+                    '<button type="button" class="btn btn-success px-4" id="archive-btn" onclick="archiveSched(' +
+                    info.event._def.extendedProps.schedule_id + ')">Archive</button>'
+                );
             } else {
                 $('.modal-footer-detail').html(
-                    '<button type="button" class="btn btn-success px-4" id="update-btn">Update</button><button type="button" class="btn btn-danger px-4" id="complete-btn" onclick="completeSched('+info.event._def.extendedProps.schedule_id+')">Complete</button>'
-                    );
+                    '<button type="button" class="btn btn-success px-4" onclick="UpdateBTN()" id="update-btn">Update</button><button type="button" class="btn btn-danger px-4" id="complete-btn" onclick="completeSched(' +
+                    info.event._def.extendedProps.schedule_id + ')">Complete</button>'
+                );
             }
 
 
@@ -461,6 +522,19 @@ var handleCalendarDemo = function() {
         });
     }
 };
+var Calendar = function() {
+    "use strict";
+    return {
+        init: function() {
+            handleCalendarDemo();
+        }
+    };
+}();
+
+$(document).ready(function() {
+    Calendar.init();
+});
+
 
 function completeSched(sched_id) {
     $('#event-details-modal').modal('hide');
@@ -475,26 +549,27 @@ function completeSched(sched_id) {
             console.log(response);
 
             message({
-                    title: 'Success!',
-                    message: response.message,
-                    icon: 'success'
-                });
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                title: 'Success!',
+                message: response.message,
+                icon: 'success'
+            });
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
 
-          
+
         },
         error: function(xhr) {
             message({
-                    title: 'Error!',
-                    message: xhr.responseJSON.error,
-                    icon: 'error'
-                });
-            
+                title: 'Error!',
+                message: xhr.responseJSON.error,
+                icon: 'error'
+            });
+
         }
     });
 }
+
 function archiveSched(sched_id) {
     $('#event-details-modal').modal('hide');
     $.ajax({
@@ -506,37 +581,25 @@ function archiveSched(sched_id) {
         },
         success: function(response) {
             message({
-                    title: 'Success!',
-                    message: response.message,
-                    icon: 'success'
-                });
+                title: 'Success!',
+                message: response.message,
+                icon: 'success'
+            });
 
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
         },
         error: function(xhr) {
             message({
-                    title: 'Error!',
-                    message: xhr.responseJSON.error,
-                    icon: 'error'
-                });
+                title: 'Error!',
+                message: xhr.responseJSON.error,
+                icon: 'error'
+            });
         }
     });
 }
 // completeSched archiveSched
-var Calendar = function() {
-    "use strict";
-    return {
-        init: function() {
-            handleCalendarDemo();
-        }
-    };
-}();
-
-$(document).ready(function() {
-    Calendar.init();
-});
 
 $("#datepicker-disabled-past").datepicker({
     todayHighlight: true
@@ -623,7 +686,7 @@ $(document).on('click', '#save-schedule', function() {
                     }
                 });
             } else {
-                alert('An error occurred: ' + xhr.responseText);
+                alert(xhr.responseJSON.message);
             }
         },
     });
@@ -663,9 +726,14 @@ $('#save-event-btn').on('click', function() {
             $('#priest-select').val('');
             // Close modal
             $('[data-bs-dismiss="modal"]').click();
+
+            $('#modal-create-mass-sched').modal('hide');
+            location.reload();
+
+
         },
         error: function(xhr, status, error) {
-            alert('An error occurred: ' + error);
+            alert(xhr.responseJSON.message);
         }
     });
 });

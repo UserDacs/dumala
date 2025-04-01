@@ -29,8 +29,8 @@
             <h4 class="panel-title" style="width: auto !important;">
                 <a href="{{ route('public_announce') }}" class="btn btn-primary btn-sm"
                     style="display: inline !important;">Create announcement</a>
-                <a href="{{ route('post_regular_sched') }}" class="btn btn-success btn-sm"
-                    style="display: inline !important;">Post regular schedule</a>
+                <!-- <a href="{{ route('post_regular_sched') }}" class="btn btn-success btn-sm"
+                    style="display: inline !important;">Post regular schedule</a> -->
             </h4>
         </div>
         <!-- END panel-heading -->

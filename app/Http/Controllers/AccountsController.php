@@ -30,7 +30,7 @@ class AccountsController extends Controller
 
             $query->where('firstname', 'like', '%' . $search . '%')
                   ->orWhere('lastname', 'like', '%' . $search . '%')
-                  ->orWhere('role', 'like', '%' . $search . '%');
+                  ->orWhere('role', '=',$search);
         }
     
         $users = $query->paginate($perPage);

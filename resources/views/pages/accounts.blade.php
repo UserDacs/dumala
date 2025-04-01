@@ -159,6 +159,7 @@
                 <div class="col-md-12 ">
                     <div class="btn-group w-100">
                         <a class="btn btn-outline-inverse all active ">All</a>
+                        <a class="btn btn-outline-inverse parish_priest ">Parish priest</a>
                         <a class="btn btn-outline-inverse priest ">Priest</a>
                         <a class="btn btn-outline-inverse secretary">Secretary</a>
                         <a class="btn btn-outline-inverse parishioners">Parishioners</a>
@@ -554,12 +555,30 @@ $(document).ready(function() {
         $(this).val(value);
     });
 
+    $("#email").on("input", function() {
+        var email = $(this).val();
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        if (emailPattern.test(email)) {
+            $(this).css("border-bottom", "1px solid green");
+        } else {
+            $(this).css("border-bottom", "1px solid red");
+        }
+    });
+
     $('#addAccountForm').on('submit', function(e) {
         e.preventDefault();
 
         let contactNumber = $('#contact').val();
         if (contactNumber.length !== 11) {
             alert('Contact number must be exactly 11 digits.');
+            return;
+        }
+
+        let email = $('#email').val();
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            alert('Invalid email format. Please enter a valid email.');
             return;
         }
 
@@ -710,9 +729,11 @@ function getList(search, url = '/user-list') {
                     let role = user.role; // Get the role text and trim spaces
                     let displayRole = "";
 
-                    if (role === "priest" || role === "parish_priest") {
+                    if (role === "priest") {
                         displayRole = "Priest";
-                    } else if (role === "secretary") {
+                    }else if (role === "parish_priest") {
+                        displayRole = "Parish Priest";
+                    }else if (role === "secretary") {
                         displayRole = "Secretary";
                     } else if (role === "parishioners") {
                         displayRole = "Parishioners";
