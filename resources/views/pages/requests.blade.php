@@ -423,7 +423,55 @@ function getList(search = '', page = 1) {
                                                         <td><strong>Venue:</strong></td>
                                                         <td>${item.venue || 'N/A'}</td>
                                                         <td><strong>Status:</strong></td>
-                                                        <td>${getStatusBadge(item.status)}</td>
+                                                        <td>${getStatusBadge(item.status, item.role_model)}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Address:</strong></td>
+                                                        <td>${item.address || 'N/A'}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            ${getActionButtons(item, userRole)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                }
+
+                if (userRole === 'secretary') {
+                    tbody.append(`
+                        <!-- Main Row -->
+                        <tr class="toggle-row" data-index="${index + 1}" data-bs-toggle="collapse" 
+                            data-bs-target="#${rowId}" aria-expanded="false" aria-controls="${rowId}">
+                            <td><img src="${item.profile_image}" class="rounded h-50px my-n1 mx-n1" alt="User" /></td>
+                            <td style="padding-top: 20px;">${item.created_by_name}</td>
+                            <td style="padding-top: 20px;">${item.purpose}</td>
+                            <td style="padding-top: 20px;">${item.date}</td>
+                            <td style="padding-top: 20px;">
+                                <span id="${arrowId}" class="ms-2 toggle-arrow"><i class="fa fa-ellipsis-h fs-30px"></i></span>
+                            </td>
+                        </tr>
+                        <!-- Collapsible Content -->
+                        <tr id="${rowId}" class="collapse fade">
+                            <td colspan="5">
+                                <div class="p-1 bg-light">
+                                    <div class="d-flex p-1">
+                                        <div class="flex-1">
+                                            <table class="table mb-2" style="border: none !important;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Requested Priest:</strong></td>
+                                                        <td>${item.assign_to_name || 'N/A'}</td>
+                                                        <td><strong>Time:</strong></td>
+                                                        <td>${item.time_from} - ${item.time_to}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Venue:</strong></td>
+                                                        <td>${item.venue || 'N/A'}</td>
+                                                        <td><strong>Status:</strong></td>
+                                                        <td>${getStatusBadge(item.status, item.role_model)}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Address:</strong></td>
@@ -455,10 +503,10 @@ function getList(search = '', page = 1) {
     });
 }
 
-function getStatusBadge(status) {
+function getStatusBadge(status,role) {
     const statuses = {
         1: '<span class="badge bg-yellow text-black">Pending</span>',
-        2: '<span class="badge bg-primary">Accepted</span>',
+        2: '<span class="badge bg-primary">Accepted by '+role+'</span>',
         3: '<span class="badge bg-danger">Declined</span>',
         4: '<span class="badge bg-info text-black">Complete</span>',
         5: '<span class="badge bg-secondary">Archived</span>',

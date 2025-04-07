@@ -29,6 +29,18 @@ if (!function_exists('get_all_priest')) {
     }
 }
 
+if (!function_exists('get_all_lit')) {
+    /**
+     * Retrieve all users with the role of 'priest' or 'parish_priest'.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    function get_all_lit()
+    {
+        return \App\Models\User::whereIn('role', ['priest', 'parish_priest'])->where('user_status','active')->get();
+    }
+}
+
 
 
 if (!function_exists('get_all_notifications')) {

@@ -8,7 +8,7 @@ use App\Http\Resources\UserResource;
 
 class AccountsController extends Controller
 {
- 
+
     /**
      * Display a listing of the resource.
      */
@@ -20,21 +20,24 @@ class AccountsController extends Controller
     public function users_list(Request $request)
     {
         $search = $request->input('search');
-        
+
         $perPage = $request->input('perPage', 10); // Default to 10 items per page
         $page = $request->input('page', 1); // Default to page 1
-    
-        $query = User::where('role', '!=', 'admin');
-    
-        if (!empty($search)) {
 
-            $query->where('firstname', 'like', '%' . $search . '%')
-                  ->orWhere('lastname', 'like', '%' . $search . '%')
-                  ->orWhere('role', '=',$search);
+        $query = User::where('role', '!=', 'admin');
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('firstname', 'like', '%' . $search . '%')
+                    ->orWhere('lastname', 'like', '%' . $search . '%')
+                    ->orWhere('role', '=', $search);
+            });
         }
-    
+
+        $query->orderBy('firstname', 'asc'); // Sort alphabetically by firstname
+
         $users = $query->paginate($perPage);
-    
+
         return UserResource::collection($users);
     }
 
@@ -85,7 +88,7 @@ class AccountsController extends Controller
 
         $user = User::findOrFail($userId);
 
-        $imagePath = $user->profile_image;  
+        $imagePath = $user->profile_image;
 
         if ($request->hasFile('profile_image')) {
 
@@ -139,6 +142,5 @@ class AccountsController extends Controller
             'success' => true,
             'message' => 'User deleted successfully!'
         ]);
-       
     }
 }

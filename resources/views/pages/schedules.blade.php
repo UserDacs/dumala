@@ -25,9 +25,10 @@
             @if( Auth::user()->role === 'admin' || Auth::user()->role === 'parish_priest' || Auth::user()->role ===
             'priest' )
             <a href="#modal-create-own-sched" data-bs-toggle="modal" class="btn btn-primary btn-sm me-1 mb-1">Create own
-                schedule</a> <a href="#modal-create-mass-sched" class="btn btn-success btn-sm me-1 mb-1"
-                data-bs-toggle="modal">Create mass
                 schedule</a>
+            <!-- <a href="#modal-create-mass-sched" class="btn btn-success btn-sm me-1 mb-1"
+                data-bs-toggle="modal">Create mass
+                schedule</a> -->
             @endif
 
 
@@ -37,47 +38,68 @@
     <!-- BEGIN row -->
     <div class="row">
         <!-- BEGIN event-list -->
+        <?php
+                $role = Auth::user()->role;
+                $shouldHide = $role === 'admin' || $role === 'parish_priest' || $role === 'priest';
+            ?>
         <div class="d-none d-lg-block" style="width: 215px">
-            <div id="external-events" class="fc-event-list " style="display: none">
-                <h5 class="mb-3">List own schedules</h5>
-                <div class="fc-event" data-sched_id="1" data-color="#00acac">
-                    <div class="fc-event-text">Meeting with Client</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-success"></i></div>
-                </div>
-                <div class="fc-event" data-sched_id="2" data-color="#348fe2">
-                    <div class="fc-event-text">IOS App Development</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-blue"></i></div>
-                </div>
-                <div class="fc-event" data-sched_id="3" data-color="#f59c1a">
-                    <div class="fc-event-text">Group Discussion</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-warning"></i></div>
-                </div>
-                <div class="fc-event" data-sched_id="4" data-color="#ff5b57">
-                    <div class="fc-event-text">New System Briefing</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-danger"></i></div>
-                </div>
+            <div id="external-events" class="fc-event-list" <?= $shouldHide ? '' : 'style="display: none;"' ?>>
+                <h5 class="mb-3">Priests</h5>
+
+                <label class="d-flex align-items-center mb-2" data-sched_id="1" data-color="#00acac">
+                    <!-- <input type="checkbox" name="events[]" value="1" checked class="me-2">
+                    <i class="fas fa-circle fa-fw fs-9px text-success me-2"></i>
+                    <span class="fc-event-text">Unassigned</span> -->
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked="">
+                        <label class="form-check-label" for="flexCheckChecked">
+                            <b>Unassigned</b>
+                        </label>
+                    </div>
+
+                </label>
+
+                <label class="d-flex align-items-center mb-2" data-sched_id="2" data-color="#348fe2">
+
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input flexCheckChecked" type="checkbox" value="{{Auth::user()->id}}" id="flexCheckChecked_{{Auth::user()->id}}" checked
+                            onclick="getEvents('{{Auth::user()->id}}')">
+                        <label class="form-check-label" for="flexCheckChecked_{{Auth::user()->id}}">
+                            <b>Own Schedule</b>
+                        </label>
+                    </div>
+                </label>
+
+
+                @foreach(get_all_priest() as $priest)
+
+                @if($priest->name != Auth::user()->name)
+                <label class="d-flex align-items-center mb-2" data-sched_id="2" data-color="#348fe2">
+
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input flexCheckChecked" type="checkbox" value="{{$priest->id}}" id="flexCheckChecked_{{$priest->id}}" <?=(Auth::user()->role === 'admin') ? "checked" : "" ?> onclick="getEvents('{{$priest->id}}')">
+                        <label class="form-check-label" for="flexCheckChecked_{{$priest->id}}">
+                            <b>{{ $priest->prefix }} {{ $priest->firstname }} {{ $priest->lastname }}</b>
+                        </label>
+                    </div>
+                </label>
+                @endif
+
+
+                <!-- <option value="{{ $priest->id }}">{{ $priest->name }}</option> -->
+                @endforeach
+
+                <!-- <label class="d-flex align-items-center mb-2" data-sched_id="3" data-color="#f59c1a">
+                    <input type="checkbox" name="events[]" value="3" class="me-2">
+                    <i class="fas fa-circle fa-fw fs-9px text-warning me-2"></i>
+                    <span class="fc-event-text">Group Discussion</span>
+                </label> -->
+
+
+
                 <hr class="my-3" />
-                <h5 class="mb-3">List mass schedules</h5>
-                <div class="fc-event" data-sched_id="5" data-color="#b6c2c9">
-                    <div class="fc-event-text">Other Event 1</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
-                </div>
-                <div class="fc-event" data-sched_id="6" data-color="#b6c2c9">
-                    <div class="fc-event-text">Other Event 2</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
-                </div>
-                <div class="fc-event" data-sched_id="7" data-color="#b6c2c9">
-                    <div class="fc-event-text">Other Event 3</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
-                </div>
-                <div class="fc-event" data-sched_id="8" data-color="#b6c2c9">
-                    <div class="fc-event-text">Other Event 4</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
-                </div>
-                <div class="fc-event" data-sched_id="9" data-color="#b6c2c9">
-                    <div class="fc-event-text">Other Event 5</div>
-                    <div class="fc-event-icon"><i class="fas fa-circle fa-fw fs-9px text-gray-500"></i></div>
-                </div>
             </div>
         </div>
         <!-- END event-list -->
@@ -104,7 +126,7 @@
             <div class="modal-body">
                 <input type="hidden" id="sched_ids">
                 <input type="hidden" id="event-priest-id">
-                <p><strong>Status:</strong> <span id="event-status"></span></p>
+                <!-- <p><strong>Status:</strong> <span id="event-status"></span></p> -->
                 <p><strong>Date:</strong> <span id="event-date"></span></p>
                 <p><strong>Time:</strong> <span id="event-time"></span></p>
                 <p><strong>Purpose:</strong> <span id="event-purpose"></span></p>
@@ -215,7 +237,7 @@
             </div> -->
             <div class="modal-body">
                 <input type="hidden" id="update_mass_sched">
-                <div class="mb-3 d-none" >
+                <div class="mb-3 d-none">
                     <label class="form-label" for="exampleInputEmail1">Date</label>
                     <div class="input-group date" id="datepicker-mass" data-date-format="yyyy-m-d"
                         data-date-start-date="Date.default">
@@ -366,7 +388,7 @@ var handleCalendarDemo = function() {
         droppable: false, // Disable event dropping
         themeSystem: 'bootstrap',
         selectable: true,
-        events: getEvets(),
+        events: getEvents(),
         // dateClick: function(info) {
         //     console.log("Clicked date:", info.dateStr);
         //     alert("You clicked on: " + info.dateStr);
@@ -462,49 +484,14 @@ var handleCalendarDemo = function() {
 
     calendar.render();
 
-    function getEvets() {
-        let ret = {};
-        $.ajax({
-            url: '/get-events',
-            method: 'GET',
-            async: false,
-            success: function(data) {
-                console.log("Sched :::", data);
-
-                if (typeof data === 'string') {
-                    try {
-                        const parsedData = JSON.parse(data);
-                        ret = parsedData.map(event => {
-                            const date = new Date(event.start);
-                            event.startFormatted = date.toLocaleString('en-US', {
-                                hour: 'numeric',
-                                minute: '2-digit',
-                                hour12: true
-                            });
-                            return event;
-                        });
-                    } catch (error) {
-                        console.error("JSON parsing error:", error);
-                    }
-                } else {
-                    ret = data.map(event => {
-                        const date = new Date(event.start);
-                        event.startFormatted = date.toLocaleString('en-US', {
-                            hour: 'numeric',
-                            minute: '2-digit',
-                            hour12: true
-                        });
-                        return event;
-                    });
-                }
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-            }
-        });
-        return ret;
+    function refreshEvents() {
+        console.log("Refreshing events...");
+        // Refetch events with updated data
+        calendar.refetchEvents(); // This will reload the events based on current state of selectedIds
     }
 
+    // Bind checkbox change to refresh the calendar
+   
     function saveEvent(eventData) {
         $.ajax({
             url: '/save-event',
@@ -522,6 +509,7 @@ var handleCalendarDemo = function() {
         });
     }
 };
+
 var Calendar = function() {
     "use strict";
     return {
@@ -534,7 +522,77 @@ var Calendar = function() {
 $(document).ready(function() {
     Calendar.init();
 });
+let selectedIds = ['<?=(Auth::user()->role === 'admin') ? "" : Auth::user()->id ?>'];
+function getEvents(val='') {
+    let ret = {};
 
+    // Check the checkbox state and either add or remove the ID from the array
+    const checkbox = $('#flexCheckChecked_' + val);  // Get the specific checkbox by ID
+    const isChecked = checkbox.prop('checked');  // Check if it's checked
+
+    // If the checkbox is checked, add its value to the array, else remove it
+    if (isChecked) {
+        // If it's not already in the array, add it
+        if (!selectedIds.includes(val)) {
+            selectedIds.push(val);
+        }
+    } else {
+        // Remove it from the array if it's unchecked
+        selectedIds = selectedIds.filter(id => id !== val);
+    }
+
+    // Log the selectedIds array to check if it updates correctly
+    console.log('Selected IDs:', selectedIds);
+
+
+    $.ajax({
+        url: '/get-events',
+        method: 'GET',
+        data: {
+            ARRAY: selectedIds
+        },
+        async: false,
+        success: function(data) {
+            console.log("Sched :::", data);
+
+            if (typeof data === 'string') {
+                try {
+                    const parsedData = JSON.parse(data);
+                    ret = parsedData.map(event => {
+                        const date = new Date(event.start);
+                        event.startFormatted = date.toLocaleString('en-US', {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                        return event;
+                    });
+                } catch (error) {
+                    console.error("JSON parsing error:", error);
+                }
+            } else {
+                ret = data.map(event => {
+                    const date = new Date(event.start);
+                    event.startFormatted = date.toLocaleString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                    return event;
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+        }
+    });
+    return ret;
+}
+
+$('.flexCheckChecked').change(function() {
+        console.log("Checkbox changed, refreshing events...");
+        Calendar.init();
+    });
 
 function completeSched(sched_id) {
     $('#event-details-modal').modal('hide');
@@ -701,41 +759,52 @@ $('#save-event-btn').on('click', function() {
     var toTime = $('#timepicker-mass-to').val();
     var priestId = $('#priest-select').val();
 
-    // Validate data
+    var fl = true
 
-    // Send data using AJAX
-    $.ajax({
-        url: '{{ route("schedules.store") }}',
-        method: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            schedId: $('#update_mass_sched').val(),
-            liturgical_id: '1',
-            date: selectedDate,
-            time_from: fromTime,
-            time_to: toTime,
-            assign_to: priestId,
-            sched_type: 'mass_sched',
-        },
-        success: function(response) {
-            alert('Event saved successfully.');
-            // Optionally, you can close the modal or reset the form here
-            $('#datepicker').val('');
-            $('#timepicker-mass-from').val('');
-            $('#timepicker-mass-to').val('');
-            $('#priest-select').val('');
-            // Close modal
-            $('[data-bs-dismiss="modal"]').click();
+    if (priestId == "") {
+        alert("Please select priest!")
+        fl = false
+    }
 
-            $('#modal-create-mass-sched').modal('hide');
-            location.reload();
+    if (fl) {
+        // Validate data
+
+        // Send data using AJAX
+        $.ajax({
+            url: '{{ route("schedules.store") }}',
+            method: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                schedId: $('#update_mass_sched').val(),
+                liturgical_id: '1',
+                date: selectedDate,
+                time_from: fromTime,
+                time_to: toTime,
+                assign_to: priestId,
+                sched_type: 'mass_sched',
+            },
+            success: function(response) {
+                alert('Event saved successfully.');
+                // Optionally, you can close the modal or reset the form here
+                $('#datepicker').val('');
+                $('#timepicker-mass-from').val('');
+                $('#timepicker-mass-to').val('');
+                $('#priest-select').val('');
+                // Close modal
+                $('[data-bs-dismiss="modal"]').click();
+
+                $('#modal-create-mass-sched').modal('hide');
+                location.reload();
 
 
-        },
-        error: function(xhr, status, error) {
-            alert(xhr.responseJSON.message);
-        }
-    });
+            },
+            error: function(xhr, status, error) {
+                alert(xhr.responseJSON.message);
+            }
+        });
+    }
+
+
 });
 </script>
 @endpush
