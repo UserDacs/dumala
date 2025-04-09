@@ -292,6 +292,7 @@
 @push('scripts')
 
 <script>
+
 $('#schedules').addClass('active');
 $(document).ready(function() {
     $("input[type='radio'][name='flexRadioDefault']").on("change", function() {
@@ -753,23 +754,77 @@ $(document).on('click', '#save-schedule', function() {
 
 
 
-$('#save-event-btn').on('click', function() {
-    var selectedDate = $('#datepicker-mass-input').val();
+
+
+$('#save-event-btn').on('click', function () {
+    $('#timepicker-mass-from').val(function() {
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12; // Convert hour from 24-hour to 12-hour format
+    hours = hours ? hours : 12; // Hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes if needed
+    
+    var currentTime = hours + ':' + minutes + ' ' + ampm;
+    console.log("currentTime::", currentTime);
+    
+    return currentTime;
+});
+var selectedDate = $('#datepicker-mass-input').val();
     var fromTime = $('#timepicker-mass-from').val();
     var toTime = $('#timepicker-mass-to').val();
+
     var priestId = $('#priest-select').val();
 
-    var fl = true
+    console.log('Oras ng Simula:', fromTime);
+    console.log('Oras ng Pagtatapos:', toTime);
 
-    if (priestId == "") {
-        alert("Please select priest!")
-        fl = false
+    var fl = true;
+
+    if (priestId === "") {
+        alert("Pumili ng pari!");
+        fl = false;
     }
 
     if (fl) {
-        // Validate data
+        // Function to convert 12-hour time format (e.g., 1:09 AM) to 24-hour time
+        function convertTo24HourFormat(time) {
+            var timeArray = time.split(' '); // Split into time and AM/PM
+            var hourMin = timeArray[0].split(':'); // Split into hours and minutes
+            var hour = parseInt(hourMin[0]);
+            var minutes = hourMin[1];
+            var period = timeArray[1]; // 'AM' or 'PM'
 
-        // Send data using AJAX
+            if (hour === 12 && period === 'AM') {
+                hour = 0; // 12 AM is midnight (00:00)
+            } else if (period === 'PM' && hour !== 12) {
+                hour += 12; // Convert PM hours to 24-hour format
+            }
+
+            return new Date('1970-01-01T' + hour.toString().padStart(2, '0') + ':' + minutes + ':00Z');
+        }
+
+        // Convert fromTime and toTime to 24-hour format using the function
+        var from = convertTo24HourFormat(fromTime);
+        var to = convertTo24HourFormat(toTime);
+
+        // Compute the difference in minutes between the times
+        var duration = (to - from) / (1000 * 60); // Duration in minutes
+
+        if (duration >= 60) {
+            console.log("✅ Okey - isang oras o higit.");
+        } else {
+            // If less than 1 hour, set toTime to 1 hour from fromTime
+            to.setMinutes(from.getMinutes() + 60); // Set toTime 1 hour after fromTime
+            var newToTime = to.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }); // Format to 12-hour time
+
+            $('#timepicker-mass-to').val(newToTime); // Set the new toTime value
+            console.log("❗ Masyadong maikli. Pinalitan ang oras ng pagtatapos:", newToTime);
+        }
+
+        // You can send data using AJAX if needed
         $.ajax({
             url: '{{ route("schedules.store") }}',
             method: 'POST',
@@ -803,7 +858,6 @@ $('#save-event-btn').on('click', function() {
             }
         });
     }
-
 
 });
 </script>

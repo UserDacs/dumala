@@ -282,7 +282,6 @@ $(document).on('click', '#save-schedule', function() {
         sched_type: 'own_sched',
         assign_to: priestId,
 
-        assign_to: '',
         _token: $('meta[name="csrf-token"]').attr('content'),
     };
 
@@ -292,10 +291,10 @@ $(document).on('click', '#save-schedule', function() {
         method: 'POST',
         data: data,
         success: function(response) {
-            console.log(response);
+            // console.log(response);
             
-            // alert(response.message);
-            // location.reload(); // Reload the page or update the DOM dynamically
+            alert(response.message);
+            location.reload(); // Reload the page or update the DOM dynamically
         },
         error: function(xhr) {
             console.log(xhr);
