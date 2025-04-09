@@ -191,7 +191,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Request priest:</label>
-                            <select class="form-select" id="priest-select">
+                            <select class="form-select priest-select" id="priest-select">
                                 <option value="" selected>Choose a priest</option>
                                 @foreach(get_all_priest() as $priest)
 
@@ -269,6 +269,7 @@ $('#requests').addClass('active');
 let currentPage = 1;
 getList();
 $(document).on('click', '#save-schedule', function() {
+    let priestId = $('.priest-select').val();
     const data = {
         date: $('#datepicker-disabled-past input').val(),
         time_from: $('#timepicker-from').val(),
@@ -279,20 +280,22 @@ $(document).on('click', '#save-schedule', function() {
         liturgical_id: $('input[name="flexRadioDefault"]:checked').attr('data-id'),
         others: $('.others').val(),
         sched_type: 'own_sched',
-        assign_to: $('#priest-select').val(),
-        // $('#priest-select').val()
-        // priest-select
+        assign_to: priestId,
+
         assign_to: '',
         _token: $('meta[name="csrf-token"]').attr('content'),
     };
 
+   
     $.ajax({
         url: '{{ route("schedules.store") }}',
         method: 'POST',
         data: data,
         success: function(response) {
-            alert(response.message);
-            location.reload(); // Reload the page or update the DOM dynamically
+            console.log(response);
+            
+            // alert(response.message);
+            // location.reload(); // Reload the page or update the DOM dynamically
         },
         error: function(xhr) {
             console.log(xhr);
@@ -440,7 +443,56 @@ function getList(search = '', page = 1) {
                     `);
                 }
 
-                if (userRole === 'secretary') {
+                if (userRole === 'secretary' ) {
+                    tbody.append(`
+                        <!-- Main Row -->
+                        <tr class="toggle-row" data-index="${index + 1}" data-bs-toggle="collapse" 
+                            data-bs-target="#${rowId}" aria-expanded="false" aria-controls="${rowId}">
+                            <td><img src="${item.profile_image}" class="rounded h-50px my-n1 mx-n1" alt="User" /></td>
+                            <td style="padding-top: 20px;">${item.created_by_name}</td>
+                            <td style="padding-top: 20px;">${item.purpose}</td>
+                            <td style="padding-top: 20px;">${item.date}</td>
+                            <td style="padding-top: 20px;">
+                                <span id="${arrowId}" class="ms-2 toggle-arrow"><i class="fa fa-ellipsis-h fs-30px"></i></span>
+                            </td>
+                        </tr>
+                        <!-- Collapsible Content -->
+                        <tr id="${rowId}" class="collapse fade">
+                            <td colspan="5">
+                                <div class="p-1 bg-light">
+                                    <div class="d-flex p-1">
+                                        <div class="flex-1">
+                                            <table class="table mb-2" style="border: none !important;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Requested Priest:</strong></td>
+                                                        <td>${item.assign_to_name || 'N/A'}</td>
+                                                        <td><strong>Time:</strong></td>
+                                                        <td>${item.time_from} - ${item.time_to}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Venue:</strong></td>
+                                                        <td>${item.venue || 'N/A'}</td>
+                                                        <td><strong>Status:</strong></td>
+                                                        <td>${getStatusBadge(item.status, item.role_model)}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Address:</strong></td>
+                                                        <td>${item.address || 'N/A'}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            ${getActionButtons(item, userRole)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                }
+
+
+                if (userRole === 'parishioners' || userRole === 'non_parishioners') {
                     tbody.append(`
                         <!-- Main Row -->
                         <tr class="toggle-row" data-index="${index + 1}" data-bs-toggle="collapse" 
@@ -525,7 +577,7 @@ function getActionButtons(item, userRole) {
     }
     return `
         <p class="mb-0 d-flex justify-content-end">
-            <a href="javascript:;" class="btn btn-sm btn-success me-5px" onclick="onclickAccept('<?= Auth::user()->id ?>', ${item.schedule_id},2)">Accept</a>
+            ${(userRole === 'parishioners' || userRole === 'non_parishioners') ? `` : `<a href="javascript:;" class="btn btn-sm btn-success me-5px" onclick="onclickAccept('<?= Auth::user()->id ?>', ${item.schedule_id},2)">Accept</a>` } 
             <a href="javascript:;" class="btn btn-sm btn-danger me-5px btn_decline" onclick="onclickDecline(${item.schedule_id})">Decline</a>
             ${item.declined_priest_id && (userRole === 'admin' || userRole === 'parish_priest') ? `
                 <a href="javascript:;" class="btn btn-sm btn-primary" onclick="onclickAssignToPriest(${item.schedule_id})">Assign another priest</a>
