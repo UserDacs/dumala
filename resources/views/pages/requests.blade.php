@@ -394,7 +394,7 @@ function getList(search = '', page = 1) {
                 const userRole = "<?= Auth::user()->role ?>";
                 const isAdminOrPriest = userRole === "admin" || userRole === "parish_priest" || userRole === "priest";
                 
-                if ((item.status == 2 && isAdminOrPriest) || (item.status != 2 && (userRole === "priest" || userRole === "admin"))) {
+                if (isAdminOrPriest) {
                     tbody.append(`
                         <!-- Main Row -->
                         <tr class="toggle-row" data-index="${index + 1}" data-bs-toggle="collapse" 
