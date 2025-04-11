@@ -271,9 +271,11 @@ class ScheduleController extends Controller
 
         // Check if the date and time are already taken with status "accepted by parish priest"
         $existingSchedule = Schedule::where('date', $date_now)
-            ->where('time_from', $time_from_24)
-            ->where('time_to', $time_to_24)
             ->where('status', '!=', 3)
+            ->where(function ($query) use ($time_from_24, $time_to_24) {
+                $query->where('time_from', '<', $time_to_24)
+                    ->where('time_to', '>', $time_from_24);
+            })
             ->first();
 
         if ($existingSchedule) {
